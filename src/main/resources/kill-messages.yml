@@ -1,0 +1,440 @@
+kill-message:
+  default:
+    item: "BARRIER:0"
+    price: 0
+    rarity: NONE
+    PvP-Kill:
+      - "&a{killer} &ekilled &c{victim}&e."
+      - "&c{victim} &edied to &a{killer}&e."
+      - "&a{killer} &eslew &c{victim}&e."
+      - "&c{victim} &ewas defeated by &a{killer}&e."
+      - "&a{killer} &ebestowed a loss upon &c{victim}&e."
+    Void-Kill:
+      - "&c{victim} &ewas knocked into the void by &a{killer}&e."
+      - "&a{killer} &esent &c{victim} &einto the abyss."
+    Explosion-Kill:
+      - "&c{victim} &ewas blown up by &a{killer}&e."
+      - "&a{killer} &eblew &c{victim} &eto smithereens."
+    Shoot-Kill:
+      - "&c{victim} &ewas shot by &a{killer}&e."
+      - "&a{killer} &esniped &c{victim}&e."
+
+  fire:
+    item: "BLAZE_POWDER:0"
+    price: 5000
+    rarity: COMMON
+    PvP-Kill:
+      - "&c{victim} &ewas incinerated by &a{killer}&e."
+      - "&a{killer} &eturned &c{victim} &eto ashes."
+      - "&c{victim} &ecould not handle &a{killer}&e's heat."
+      - "&a{killer} &eroasted &c{victim}&e."
+      - "&c{victim} &ewas burned alive by &a{killer}&e."
+    Void-Kill:
+      - "&c{victim} &efell into a fiery pit thanks to &a{killer}&e."
+      - "&a{killer} &edropped &c{victim} &einto the magma void."
+    Explosion-Kill:
+      - "&c{victim} &ewas combusted by &a{killer}&e."
+      - "&a{killer} &esparked an explosive end for &c{victim}&e."
+    Shoot-Kill:
+      - "&c{victim} &ewas struck by a fireball from &a{killer}&e."
+      - "&a{killer} &echarred &c{victim} &ewith a flaming shot."
+
+  western:
+    item: "BOW:0"
+    price: 5500
+    rarity: COMMON
+    PvP-Kill:
+      - "&a{killer} &edrew faster than &c{victim}&e."
+      - "&c{victim} &ewas sent to the saloon by &a{killer}&e."
+      - "&a{killer} &ewrangled &c{victim}&e."
+      - "&c{victim} &emet their match against &a{killer}&e."
+      - "&a{killer} &eshowed &c{victim} &ewho the real sheriff is."
+    Void-Kill:
+      - "&c{victim} &etumbled off the cliff edge courtesy of &a{killer}&e."
+      - "&a{killer} &eyee-haw'd &c{victim} &einto the canyon."
+    Explosion-Kill:
+      - "&a{killer} &eused dynamite on &c{victim}&e."
+      - "&c{victim} &ewas blown to bits in &a{killer}&e's gold mine."
+    Shoot-Kill:
+      - "&a{killer} &eshot &c{victim} &eright between the eyes."
+      - "&c{victim} &ewas out-gunned by &a{killer}&e."
+
+  honourable:
+    item: "IRON_SWORD:0"
+    price: 7000
+    rarity: UNCOMMON
+    PvP-Kill:
+      - "&c{victim} &efought bravely but fell to &a{killer}&e."
+      - "&a{killer} &ecommends &c{victim} &eon a good duel."
+      - "&c{victim} &ewas honorably defeated by &a{killer}&e."
+      - "&a{killer} &ebowed to &c{victim} &eafter a fierce battle."
+      - "&c{victim} &eand &a{killer} &ecrossed blades for the final time."
+    Void-Kill:
+      - "&c{victim} &etook a noble plunge against &a{killer}&e."
+      - "&a{killer} &ewatched &c{victim} &efall with honor."
+    Explosion-Kill:
+      - "&c{victim} &efaced &a{killer}&e's explosion fearlessly."
+      - "&a{killer} &egave &c{victim} &ea glorious explosive exit."
+    Shoot-Kill:
+      - "&a{killer} &estruck &c{victim} &ewith a majestic arrow."
+      - "&c{victim} &ewas pierced by &a{killer}&e's precise shot."
+
+  love:
+    item: "RED_ROSE:0"
+    price: 8500
+    rarity: RARE
+    PvP-Kill:
+      - "&a{killer} &einstilled tough love into &c{victim}&e."
+      - "&c{victim} &efell head over heels for &a{killer}&e."
+      - "&a{killer} &egave &c{victim} &ea deadly hug."
+      - "&c{victim} &ewas killed with kindness by &a{killer}&e."
+      - "&a{killer} &ebroke &c{victim}&e's heart."
+    Void-Kill:
+      - "&c{victim} &efell for &a{killer} &e... literally."
+      - "&a{killer} &epushed &c{victim} &einto the tunnel of love."
+    Explosion-Kill:
+      - "&c{victim} &ewas blown away by &a{killer}&e's affection."
+      - "&a{killer}&e's love for &c{victim} &ewas explosive."
+    Shoot-Kill:
+      - "&a{killer} &eplayed Cupid and shot &c{victim}&e."
+      - "&c{victim} &ewas struck by &a{killer}&e's love arrow."
+
+  bbq:
+    item: "COOKED_BEEF:0"
+    price: 6000
+    rarity: COMMON
+    PvP-Kill:
+      - "&c{victim} &ewas grilled to perfection by &a{killer}&e."
+      - "&a{killer} &eserved &c{victim} &eon a platter."
+      - "&c{victim} &ecouldn't stand the sizzle of &a{killer}&e."
+      - "&a{killer} &eadded some spice to &c{victim}&e."
+      - "&c{victim} &ewas overcooked by &a{killer}&e."
+    Void-Kill:
+      - "&c{victim} &edropped off the grill thanks to &a{killer}&e."
+      - "&a{killer} &etossed &c{victim} &einto the grease trap."
+    Explosion-Kill:
+      - "&c{victim} &eexperienced a grease fire started by &a{killer}&e."
+      - "&a{killer} &eblew up the BBQ with &c{victim} &einside."
+    Shoot-Kill:
+      - "&a{killer} &eskewered &c{victim}&e."
+      - "&c{victim} &ewas hit by a hotdog thrown by &a{killer}&e."
+
+  woof_woof:
+    item: "BONE:0"
+    price: 6500
+    rarity: UNCOMMON
+    PvP-Kill:
+      - "&a{killer} &ebit &c{victim}&e."
+      - "&c{victim} &ewas mauled by &a{killer}&e."
+      - "&a{killer} &eshowed &c{victim} &eoff to the pack."
+      - "&c{victim} &ewas treated like a chew toy by &a{killer}&e."
+      - "&a{killer} &ebarked loudly at &c{victim}&e."
+    Void-Kill:
+      - "&c{victim} &echased a ball into the void thrown by &a{killer}&e."
+      - "&a{killer} &espooked &c{victim} &eoff the edge."
+    Explosion-Kill:
+      - "&c{victim} &eate a spicy bone from &a{killer}&e."
+      - "&a{killer} &edug up a landmine for &c{victim}&e."
+    Shoot-Kill:
+      - "&a{killer} &efetched an arrow for &c{victim}&e."
+      - "&c{victim} &ewas hit by a stray frisbee from &a{killer}&e."
+
+  santas_workshop:
+    item: "SNOW_BALL:0"
+    price: 12000
+    rarity: EPIC
+    PvP-Kill:
+      - "&a{killer} &eput &c{victim} &eon the naughty list."
+      - "&c{victim} &ereceived coal from &a{killer}&e."
+      - "&a{killer} &egift-wrapped &c{victim}&e."
+      - "&c{victim} &ewas run over by &a{killer}&e's reindeer."
+      - "&a{killer} &epacked &c{victim} &einto a toy box."
+    Void-Kill:
+      - "&c{victim} &eslipped on the ice created by &a{killer}&e."
+      - "&a{killer} &edropped &c{victim} &edown the chimney."
+    Explosion-Kill:
+      - "&c{victim} &eopened a rigged present from &a{killer}&e."
+      - "&a{killer}'s &esnowglobe exploded on &c{victim}&e."
+    Shoot-Kill:
+      - "&a{killer} &ethrew a lethal snowball at &c{victim}&e."
+      - "&c{victim} &ewas sniped by an elf working for &a{killer}&e."
+
+  primal:
+    item: "LEATHER:0"
+    price: 7500
+    rarity: UNCOMMON
+    PvP-Kill:
+      - "&a{killer} &easserted dominance over &c{victim}&e."
+      - "&c{victim} &ewas hunted down by &a{killer}&e."
+      - "&a{killer} &esmashed &c{victim} &ewith a club."
+      - "&c{victim} &ewas devoured by &a{killer}&e."
+      - "&a{killer} &eproved to be the apex predator against &c{victim}&e."
+    Void-Kill:
+      - "&c{victim} &ewas thrown into the gorge by &a{killer}&e."
+      - "&a{killer} &ebanished &c{victim} &efrom the tribe."
+    Explosion-Kill:
+      - "&c{victim} &ediscovered fire the hard way with &a{killer}&e."
+      - "&a{killer} &ecaused a volcanic eruption on &c{victim}&e."
+    Shoot-Kill:
+      - "&a{killer} &ethrew a spear through &c{victim}&e."
+      - "&c{victim} &ewas struck by &a{killer}&e's rock."
+
+  squeak:
+    item: "BROWN_MUSHROOM:0"
+    price: 5000
+    rarity: COMMON
+    PvP-Kill:
+      - "&a{killer} &enibbled &c{victim} &eto death."
+      - "&c{victim} &ewas trapped by &a{killer}&e."
+      - "&a{killer} &estole &c{victim}&e's cheese."
+      - "&c{victim} &ewas squeaked at by &a{killer}&e."
+      - "&a{killer} &escratched &c{victim}&e."
+    Void-Kill:
+      - "&c{victim} &efell down a mouse hole running from &a{killer}&e."
+      - "&a{killer} &epushed &c{victim} &eoff the counter."
+    Explosion-Kill:
+      - "&c{victim} &echewed on &a{killer}&e's explosive wire."
+      - "&a{killer} &eset off a mousetrap on &c{victim}&e."
+    Shoot-Kill:
+      - "&a{killer} &elaunched a cheese-wheel at &c{victim}&e."
+      - "&c{victim} &ewas hit by a flying crumb from &a{killer}&e."
+
+  pirate:
+    item: "IRON_SWORD:0"
+    price: 9000
+    rarity: RARE
+    PvP-Kill:
+      - "&a{killer} &eplundered &c{victim}&e's loot."
+      - "&c{victim} &ewas slashed by &a{killer}&e's cutlass."
+      - "&a{killer} &esent &c{victim} &eto Davy Jones' locker."
+      - "&c{victim} &ewas keelhauled by &a{killer}&e."
+      - "&a{killer} &eshowed &c{victim} &eno quarter."
+    Void-Kill:
+      - "&c{victim} &ewas forced to walk the plank by &a{killer}&e."
+      - "&a{killer} &ethrew &c{victim} &eoverboard."
+    Explosion-Kill:
+      - "&c{victim} &ewas blown to pieces by &a{killer}&e's cannon."
+      - "&a{killer} &elit the powder keg near &c{victim}&e."
+    Shoot-Kill:
+      - "&a{killer} &eshot &c{victim} &ewith a musket."
+      - "&c{victim} &etook a harpoon from &a{killer}&e."
+
+  spooked:
+    item: "PUMPKIN:0"
+    price: 11000
+    rarity: EPIC
+    PvP-Kill:
+      - "&a{killer} &escared &c{victim} &eto death."
+      - "&c{victim} &ewas haunted by &a{killer}&e."
+      - "&a{killer} &eturned &c{victim} &einto a ghost."
+      - "&c{victim} &eexperienced a nightmare caused by &a{killer}&e."
+      - "&a{killer} &edragged &c{victim} &einto the shadows."
+    Void-Kill:
+      - "&c{victim} &efell into the underworld escaping &a{killer}&e."
+      - "&a{killer} &eplunged &c{victim} &einto darkness."
+    Explosion-Kill:
+      - "&c{victim} &eblew up like a jack-o-lantern thanks to &a{killer}&e."
+      - "&a{killer} &ecast an explosive hex on &c{victim}&e."
+    Shoot-Kill:
+      - "&a{killer} &eshot a cursed projectile at &c{victim}&e."
+      - "&c{victim} &ewas struck by a phantom arrow from &a{killer}&e."
+
+  memed:
+    item: "NAME_TAG:0"
+    price: 15000
+    rarity: LEGENDARY
+    PvP-Kill:
+      - "&a{killer} &eyeeted &c{victim}&e."
+      - "&c{victim} &etook an L from &a{killer}&e."
+      - "&a{killer} &e360-no-scoped &c{victim}&e."
+      - "&c{victim} &ewas ratio'd by &a{killer}&e."
+      - "&a{killer} &esent &c{victim} &eto the backrooms."
+    Void-Kill:
+      - "&c{victim} &enoclipped out of reality thanks to &a{killer}&e."
+      - "&a{killer} &esaid bye have a great time to &c{victim}&e."
+    Explosion-Kill:
+      - "&c{victim} &ewas un-alived by &a{killer}&e's boom boom."
+      - "&a{killer} &edropped an F in the chat for &c{victim}&e."
+    Shoot-Kill:
+      - "&a{killer} &ecaught &c{victim} &ein 4k with an arrow."
+      - "&c{victim} &etook a projectile to the knee from &a{killer}&e."
+
+  buzz:
+    item: "GOLD_NUGGET:0"
+    price: 8000
+    rarity: UNCOMMON
+    PvP-Kill:
+      - "&a{killer} &estung &c{victim}&e."
+      - "&c{victim} &ewas swarmed by &a{killer}&e."
+      - "&a{killer} &eharvested &c{victim}&e's honey."
+      - "&c{victim} &efelt the buzz of &a{killer}&e."
+      - "&a{killer} &epolinated &c{victim}&e's grave."
+    Void-Kill:
+      - "&c{victim} &edropped from the hive by &a{killer}&e."
+      - "&a{killer} &eswatted &c{victim} &einto the void."
+    Explosion-Kill:
+      - "&c{victim} &estepped on a bee placed by &a{killer}&e."
+      - "&a{killer} &ebrought the sting of an explosion to &c{victim}&e."
+    Shoot-Kill:
+      - "&a{killer} &eshot a stinger at &c{victim}&e."
+      - "&c{victim} &ewas pierced by &a{killer}&e's dart."
+
+  dramatic:
+    item: "GHAST_TEAR:0"
+    price: 13500
+    rarity: EPIC
+    PvP-Kill:
+      - "&c{victim} &egasped their last breath against &a{killer}&e."
+      - "&a{killer} &eended &c{victim}&e's tragic story."
+      - "&c{victim} &efell theatrically before &a{killer}&e."
+      - "&a{killer} &eclosed the curtains on &c{victim}&e."
+      - "&c{victim} &ecried out in vain to &a{killer}&e."
+    Void-Kill:
+      - "&c{victim} &espiraled into oblivion orchestrated by &a{killer}&e."
+      - "&a{killer} &ewatched &c{victim} &efall slowly into the abyss."
+    Explosion-Kill:
+      - "&c{victim} &ewas shattered into a million pieces by &a{killer}&e."
+      - "&a{killer} &eunleashed a devastating blast upon &c{victim}&e."
+    Shoot-Kill:
+      - "&a{killer} &epierced &c{victim}&e's dramatic heart."
+      - "&c{victim} &ewas struck by destiny, and &a{killer}&e's arrow."
+
+  oink:
+    item: "PORK:0"
+    price: 5500
+    rarity: COMMON
+    PvP-Kill:
+      - "&a{killer} &emade bacon out of &c{victim}&e."
+      - "&c{victim} &ewas slaughtered by &a{killer}&e."
+      - "&a{killer} &ewent ham on &c{victim}&e."
+      - "&c{victim} &esquealed while fighting &a{killer}&e."
+      - "&a{killer} &erolled &c{victim} &ein the mud."
+    Void-Kill:
+      - "&c{victim} &efell into the trough pushed by &a{killer}&e."
+      - "&a{killer} &esent &c{victim} &eflying into the void."
+    Explosion-Kill:
+      - "&c{victim} &ewas roasted in a pen by &a{killer}&e."
+      - "&a{killer} &eturned &c{victim} &einto crispy bacon."
+    Shoot-Kill:
+      - "&a{killer} &epig-sniped &c{victim}&e."
+      - "&c{victim} &ewas hit by a flying piglet sent by &a{killer}&e."
+
+  space:
+    item: "ENDER_PEARL:0"
+    price: 18000
+    rarity: LEGENDARY
+    PvP-Kill:
+      - "&a{killer} &eabducted &c{victim}&e."
+      - "&c{victim} &ewas vaporized by &a{killer}&e."
+      - "&a{killer} &esent &c{victim} &eto the moon."
+      - "&c{victim} &eexperienced zero gravity thanks to &a{killer}&e."
+      - "&a{killer} &eeclipsed &c{victim}&e."
+    Void-Kill:
+      - "&c{victim} &ewas sucked into a black hole by &a{killer}&e."
+      - "&a{killer} &eexiled &c{victim} &einto deep space."
+    Explosion-Kill:
+      - "&c{victim} &ewas caught in &a{killer}&e's supernova."
+      - "&a{killer} &eorbital-striked &c{victim}&e."
+    Shoot-Kill:
+      - "&a{killer} &elaser-beamed &c{victim}&e."
+      - "&c{victim} &ewas struck by a meteor thrown by &a{killer}&e."
+
+  ninja:
+    item: "COAL:0"
+    price: 14000
+    rarity: EPIC
+    PvP-Kill:
+      - "&a{killer} &eassassinated &c{victim}&e."
+      - "&c{victim} &edid not see &a{killer} &ecoming."
+      - "&a{killer} &estruck &c{victim} &efrom the shadows."
+      - "&c{victim} &ewas out-maneuvered by &a{killer}&e."
+      - "&a{killer} &esilenced &c{victim}&e."
+    Void-Kill:
+      - "&c{victim} &ewas swept off their feet by &a{killer}&e."
+      - "&a{killer} &edrop-kicked &c{victim} &einto the chasm."
+    Explosion-Kill:
+      - "&c{victim} &estepped on &a{killer}&e's smoke bomb."
+      - "&a{killer} &eblew &c{victim} &eup with ninja magic."
+    Shoot-Kill:
+      - "&a{killer} &ethrew a shuriken at &c{victim}&e."
+      - "&c{victim} &ewas hit by a poison dart from &a{killer}&e."
+
+  frost:
+    item: "ICE:0"
+    price: 11500
+    rarity: RARE
+    PvP-Kill:
+      - "&a{killer} &egave &c{victim} &efrostbite."
+      - "&c{victim} &efroze to death fighting &a{killer}&e."
+      - "&a{killer} &eput &c{victim} &eon ice."
+      - "&c{victim} &ecould not break &a{killer}&e's icy grip."
+      - "&a{killer} &echilled &c{victim} &eto the bone."
+    Void-Kill:
+      - "&c{victim} &eslipped into the frozen depths due to &a{killer}&e."
+      - "&a{killer} &eshattered &c{victim} &eover the edge."
+    Explosion-Kill:
+      - "&c{victim} &ewas caught in &a{killer}&e's blizzard."
+      - "&a{killer} &ecaused an avalanche on &c{victim}&e."
+    Shoot-Kill:
+      - "&a{killer} &eshot an icicle through &c{victim}&e."
+      - "&c{victim} &ewas impaled by &a{killer}&e's frost arrow."
+
+  dragon:
+    item: "DRAGON_EGG:0"
+    price: 25000
+    rarity: LEGENDARY
+    PvP-Kill:
+      - "&a{killer} &edevoured &c{victim}&e."
+      - "&c{victim} &ewas crushed by &a{killer}&e's scales."
+      - "&a{killer} &eunleashed the dragon's wrath upon &c{victim}&e."
+      - "&c{victim} &efell to the ancient beast &a{killer}&e."
+      - "&a{killer} &etore &c{victim} &eapart."
+    Void-Kill:
+      - "&c{victim} &ewas dropped from the sky by &a{killer}&e."
+      - "&a{killer} &eflapped &c{victim} &einto the void."
+    Explosion-Kill:
+      - "&c{victim} &ewas incinerated by &a{killer}&e's breath."
+      - "&a{killer} &ebrought draconic destruction to &c{victim}&e."
+    Shoot-Kill:
+      - "&a{killer} &eshot a fireball at &c{victim}&e."
+      - "&c{victim} &ewas pierced by a dragon spike from &a{killer}&e."
+
+  royal:
+    item: "GOLD_HELMET:0"
+    price: 16000
+    rarity: EPIC
+    PvP-Kill:
+      - "&a{killer} &eexecuted &c{victim}&e."
+      - "&c{victim} &ebowed down to &a{killer}&e."
+      - "&a{killer} &eordered the demise of &c{victim}&e."
+      - "&c{victim} &ewas defeated by His Majesty &a{killer}&e."
+      - "&a{killer} &eclaimed &c{victim}&e's throne."
+    Void-Kill:
+      - "&c{victim} &ewas banished to the dungeon by &a{killer}&e."
+      - "&a{killer} &ethrew &c{victim} &eoff the castle walls."
+    Explosion-Kill:
+      - "&c{victim} &efaced the royal cannon of &a{killer}&e."
+      - "&a{killer} &eblew up &c{victim}&e's kingdom."
+    Shoot-Kill:
+      - "&a{killer} &eordered archers to fire upon &c{victim}&e."
+      - "&c{victim} &ewas struck by a royal javelin from &a{killer}&e."
+
+  toxic:
+    item: "SPIDER_EYE:0"
+    price: 8500
+    rarity: RARE
+    PvP-Kill:
+      - "&a{killer} &espoiled &c{victim}&e's day."
+      - "&c{victim} &esuccumbed to &a{killer}&e's venom."
+      - "&a{killer} &einfected &c{victim}&e."
+      - "&c{victim} &echoked on &a{killer}&e's toxicity."
+      - "&a{killer} &emeltdown'd &c{victim}&e."
+    Void-Kill:
+      - "&c{victim} &ewas dumped into the toxic waste by &a{killer}&e."
+      - "&a{killer} &epushed &c{victim} &einto the sewer drain."
+    Explosion-Kill:
+      - "&c{victim} &ewas caught in a chemical blast by &a{killer}&e."
+      - "&a{killer} &eblew up the laboratory with &c{victim} &einside."
+    Shoot-Kill:
+      - "&a{killer} &eshot an acid orb at &c{victim}&e."
+      - "&c{victim} &ewas hit by a toxic dart from &a{killer}&e."

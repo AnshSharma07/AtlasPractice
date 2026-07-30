@@ -1,0 +1,119 @@
+name: AtlasPractice
+main: com.ansh.atlaspractice.AtlasPracticePlugin
+version: 1.0
+author: ansh
+depend: [SlimeWorldManager]
+softdepend: [AdvancedReplay]
+
+commands:
+  randomqueue:
+    aliases: [ rq, random ]
+    description: Queue into a random unranked kit.
+
+  duel:
+    description: Challenge another player to a duel.
+
+  kitlayout:
+    description: Edit Kit as per your preference.
+
+  resetlayout:
+    description: Resets a custom kit layout back to the administrative baseline template structure.
+    usage: /resetlayout <kitName>
+
+  cosmetics:
+    description: Cosmetics
+    usage: /cosmetics
+
+  accept:
+    description: Accept an active pending direct duel challenge sequence.
+    usage: /accept <player>
+
+  deny:
+    description: Deny a duel request
+
+  party:
+    description: Manage your party.
+
+  stats:
+    description: View player statistics.
+
+  spec:
+    aliases: [spectate]
+    description: Spectate a player's active match.
+
+  arena:
+    description: Manage practice arenas.
+    permission: atlaspractice.admin.arena
+
+  practice:
+    description: AtlasPractice player utilities.
+
+  practiceadmin:
+    aliases: [pa]
+    description: AtlasPractice administrative utilities.
+    permission: atlaspractice.admin
+
+  kit:
+    description: AtlasPractice kit administration.
+    usage: /kit <create|edit|delete|list>
+    permission: atlaspractice.admin
+
+  atlasleaderboard:
+    aliases: [lb, leaderboards]
+    description: Manage packet holograms and leaderboards.
+    permission: atlaspractice.admin
+
+# UNDER DEVELOPMENT
+#  bot:
+#    description: Fight a practice bot
+#    usage: /bot
+#    permission: atlaspractice.bot
+
+  arenaautosetup:
+    description: Internal Atlas Practice auto setup hook
+    permission: atlas.admin
+
+  toolazytocreatekits:
+    description: Opens the clickable preset kit generator.
+    permission: atlas.admin
+
+  presetkitcreate:
+    description: Internal hidden command to generate the targeted preset kit.
+    permission: atlas.admin
+
+  setlobbyspawn:
+    description: Sets the main lobby spawn point location.
+    permission: atlaspractice.admin
+
+  spawn:
+    description: Teleports back to the lobby spawn point safely.
+
+  xp:
+    description: Manage progression XP.
+    permission: atlaspractice.admin.progression
+
+  coins:
+    description: Manage progression coins.
+    permission: atlaspractice.admin.progression
+
+  atlasreplayview:
+    description: Opens a saved AtlasPractice match replay.
+    usage: /atlasreplayview <replayId>
+
+  allowedrankedkits:
+    description: Open the admin GUI to enable/disable kits for ranked queue.
+    permission: atlaspractice.admin
+    usage: /allowedrankedkits
+
+permissions:
+  atlaspractice.admin:
+    default: op
+
+  atlaspractice.admin.arena:
+    default: op
+
+  atlaspractice.build.bypass:
+    default: op
+
+  atlaspractice.admin.progression:
+    default: op

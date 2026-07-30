@@ -1,0 +1,308 @@
+hotbar:
+  lobby:
+    unranked:
+      slot: 0
+      material: IRON_SWORD
+      amount: 1
+      durability: 0
+      enchanted: false
+      name: "&aUnranked Queue &7(Right Click)"
+      lore:
+        - "&7Fight practice matches."
+        - "&7No elo is affected."
+
+    ranked:
+      slot: 1
+      material: DIAMOND_SWORD
+      amount: 1
+      durability: 0
+      enchanted: false
+      name: "&cRanked Queue &7(Right Click)"
+      lore:
+        - "&7Compete against other players."
+        - "&7Earn and lose ELO."
+
+    party:
+      slot: 3
+      material: NETHER_STAR
+      amount: 1
+      durability: 0
+      enchanted: true
+      name: "&dParty Menu &7(Right Click)"
+      lore:
+        - "&7Create a party."
+        - "&7Invite friends and play together."
+
+    kit-editor:
+      slot: 4
+      material: BOOK
+      amount: 1
+      durability: 0
+      enchanted: false
+      name: "&bKit Editor &7(Right Click)"
+      lore:
+        - "&7Customize your kit layouts."
+
+    cosmetics:
+      slot: 7
+      material: CHEST
+      amount: 1
+      durability: 0
+      enchanted: true
+      name: "&dCosmetics &7(Right Click)"
+      lore:
+        - "&7Customize your cosmetics."
+        - "&7Trails, Kill Effects,"
+        - "&7Auras, Chat Colors & more."
+
+    settings:
+      slot: 8
+      material: REDSTONE_COMPARATOR
+      amount: 1
+      durability: 0
+      enchanted: false
+      name: "&eSettings &7(Right Click)"
+      lore:
+        - "&7Toggle preferences."
+        - "&7Customize your experience."
+
+  queue:
+    leave:
+      slot: 4
+      material: REDSTONE
+      amount: 1
+      durability: 0
+      enchanted: false
+      name: "&cLeave Queue &7(Right Click)"
+      lore:
+        - "&7Leave the current queue."
+
+  party:
+    ffa:
+      slot: 0
+      material: DIAMOND_SWORD
+      amount: 1
+      durability: 0
+      enchanted: false
+      name: "&6Party FFA &7(Right Click)"
+      lore:
+        - "&7Start a free-for-all with your party."
+
+    split:
+      slot: 1
+      material: IRON_SWORD
+      amount: 1
+      durability: 0
+      enchanted: false
+      name: "&aParty Split &7(Right Click)"
+      lore:
+        - "&7Split the party into two random teams."
+
+    pvp:
+      slot: 2
+      material: GOLD_SWORD
+      amount: 1
+      durability: 0
+      enchanted: false
+      name: "&bParty vs Party &7(Right Click)"
+      lore:
+        - "&7Challenge another party to a duel."
+
+    leave:
+      slot: 7
+      material: REDSTONE
+      amount: 1
+      durability: 0
+      enchanted: false
+      name: "&cLeave Party &7(Right Click)"
+      lore:
+        - "&7Leave your current party."
+
+    disband:
+      slot: 8
+      material: BARRIER
+      amount: 1
+      durability: 0
+      enchanted: false
+      name: "&cDisband Party &7(Right Click)"
+      lore:
+        - "&7Disband the party."
+        - "&7&o(Leader only)"
+
+  spectate:
+    teleport:
+      slot: 0
+      material: COMPASS
+      amount: 1
+      durability: 0
+      enchanted: false
+      name: "&bTeleport &7(Right Click)"
+      lore:
+        - "&7Teleport to players."
+
+    inventory:
+      slot: 1
+      material: BOOK
+      amount: 1
+      durability: 0
+      enchanted: false
+      name: "&eView Inventory &7(Right Click)"
+      lore:
+        - "&7Inspect a player's inventory."
+
+    leave:
+      slot: 8
+      material: REDSTONE
+      amount: 1
+      durability: 0
+      enchanted: false
+      name: "&cStop Spectating &7(Right Click)"
+      lore:
+        - "&7Return to spawn."
+
+  editor:
+    save:
+      slot: 51
+      material: EMERALD_BLOCK
+      amount: 1
+      durability: 0
+      enchanted: true
+      name: "&aSave Layout"
+      lore:
+        - "&7Save your current layout."
+
+    cancel:
+      slot: 53
+      material: REDSTONE_BLOCK
+      amount: 1
+      durability: 0
+      enchanted: false
+      name: "&cDiscard Changes"
+      lore:
+        - "&7Exit without saving."
+
+
+# TNT & Fireball Settings.
+special:
+  tnt:
+    enabled: true
+    # How many ticks before the TNT detonates (20 ticks = 1 second).
+    fuseTicks: 40
+    # Blast radius in blocks.
+    radius: 4.5
+    # Base outward force applied to nearby players (Minemen-tuned).
+    knockback: 2.8
+    intensity: 1.0
+    breakPlacedBlocks: true
+    breakBreakableBlocks: true
+    breakEndstone: true
+    breakBeds: false
+    damagePlayers: false
+
+  fireball:
+    enabled: true
+    # Blast radius in blocks.
+    radius: 4.0
+    # Base outward force applied to nearby players (Minemen-tuned).
+    knockback: 3.0
+    # Projectile speed (blocks per tick equivalent).
+    speed: 2.8
+    cooldownTicks: 8
+    breakPlacedBlocks: true
+    breakBreakableBlocks: false
+    breakEndstone: false
+    breakBeds: false
+    damagePlayers: false
+
+    bounce:
+      # Enable the left-click fireball bounce-back mechanic.
+      enabled: true
+      # Maximum distance (blocks) from the player to detect an incoming fireball.
+      max-range: 4.0
+      # Maximum degrees off-centre the player's aim can be and still deflect.
+      max-angle: 35.0
+      # Multiplier applied to fireball speed after deflection (1.0 = same speed).
+      speed-multiplier: 1.0
+
+
+# bot settings, best settings are already configured.
+bot:
+  enabled: true
+  name: "AtlasBotT"
+  skin: "Dream"
+
+  boxing-enabled: true
+  despawn-after-match: true
+  eat-health: 10
+  target-range: 20
+  idle-look-around: true
+
+  easy:
+    cps: 6
+    range: 2.95
+    reaction-ms: 240
+    strafe-speed: 0.55
+
+  medium:
+    cps: 9
+    range: 3.00
+    reaction-ms: 130
+    strafe-speed: 0.80
+
+  hard:
+    cps: 12
+    range: 3.00
+    reaction-ms: 72
+    strafe-speed: 0.95
+
+  insane:
+    cps: 14
+    range: 3.03
+    reaction-ms: 38
+    strafe-speed: 1.06
+
+  impossible:
+    cps: 15
+    range: 3.03
+    reaction-ms: 28
+    strafe-speed: 1.15
+
+# Arena Auto Setup
+# Vertical build limit for automatically generated arena boundaries.
+# Allowed: 10-25 (defaults to 15 if invalid).
+arena-auto-setup:
+  build-limit: 15
+
+# SlimeWorldManager integration. The loader must exist in SWM's config.
+# Preferable: file
+swm:
+  loader: file
+# This feature is experimental.
+# When enabled, the plugin automatically creates temporary arenas on demand.
+# If there are not enough free arenas, players won't have to wait for an arena to become available.
+# Instead, new temporary arenas are generated instantly, making the server feel like it has unlimited arenas.
+runtime-overflow:
+  enabled: true
+
+# Shared Arena
+# Allows multiple kits listed below to use the same arena.
+# When combined with Runtime Overflow, you only need a few arenas to support unlimited matches.
+# Example: Set up just 4-5 arenas, enable both features, and every supported kit can run as many matches as needed.
+# Pretty cool, right? :)
+Shared-Arena:
+  Enabled: true
+  Modes:
+    NODEBUFF: true
+    BOXING: true
+    BUILDUHC: true
+    COMBO: true
+    GAPPLE: true
+    ARCHER: true
+    CLASSIC: true
+    IRON: true
+    DIAMOND: true
+    HCF: true
+    FINALUHC: true
+    DEBUFF: true
+    SOUP: true
+    AXE: true

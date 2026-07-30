@@ -1,0 +1,9 @@
+# Ranked mode settings
+Ranked:
+  enabled: true
+  win-elo: 15
+  lose-elo: 15
+  minimum-wins-needed: GLOBAL # GLOBAL / PER-KIT
+  global:
+    wins: 0
+  kits: {}

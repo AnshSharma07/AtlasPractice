@@ -1,0 +1,70 @@
+plugins {
+    id 'java'
+    id "com.gradleup.shadow" version "9.6.0"
+}
+
+group = 'com.ansh'
+version = '1.0'
+
+configurations {
+    shadow
+    implementation.extendsFrom shadow
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+    maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+    maven { url = 'https://repo.codemc.io/repository/maven-public/' }
+    maven { url = 'https://jitpack.io' }
+}
+
+dependencies {
+    /*
+     * Minecraft 1.8.8 / PandaSpigot API
+     */
+    compileOnly 'org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT'
+    compileOnly files("libs/spigot-1.8.8.jar")
+
+    /*
+     * PlaceholderAPI
+     */
+    compileOnly 'me.clip:placeholderapi:2.11.6'
+
+    /*
+     * HikariCP (Shaded into the plugin)
+     */
+    shadow 'com.zaxxer:HikariCP:5.1.0'
+
+    /*
+     * Lombok
+     */
+    compileOnly 'org.projectlombok:lombok:1.18.36'
+    annotationProcessor 'org.projectlombok:lombok:1.18.36'
+
+    /*
+     * Optional local jars
+     */
+    compileOnly files('libs/ProtocolLib-4.8.0.jar')
+    compileOnly files('libs/worldedit-6.1.9.jar')
+    compileOnly files('libs/worldguard-6.2.jar')
+    compileOnly files('libs/ajLeaderboards-2.11.0.jar')
+    compileOnly files('libs/citizens.jar')
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+test {
+    useJUnitPlatform()
+}
+shadowJar {
+    configurations = [project.configurations.shadow]
+    archiveClassifier.set('')
+}

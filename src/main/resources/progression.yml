@@ -1,0 +1,47 @@
+# xp per event.
+xp:
+  kill: 20
+  death: 0
+  win: 100
+  loss: 0
+
+  bot-win: 50
+  bot-loss: 10
+
+  ranked-win: 175
+  ranked-loss: 40
+
+  play-match: 10
+  daily-login: 200
+  tournament-win: 600
+  party-match: 15
+
+# coins per event.
+coins:
+  kill: 8
+  death: 0
+  win: 35
+  loss: 8
+
+  ranked-win: 55
+  ranked-loss: 15
+
+  bot-win: 5
+  bot-loss: 5
+
+  daily-login: 100
+
+level-up:
+  title:
+    enabled: true
+  firework: true
+
+actionbar:
+  enabled: true
+
+  rewards: "&b+%xp% XP &8• &6+%coins% Coins"
+  xp-only: "&b+%xp% XP"
+  coins-only: "&6+%coins% Coins"
+  purchase: "&c-%coins% Coins"
+  level-up: "&e⭐ Level %level%"
+  sound: true

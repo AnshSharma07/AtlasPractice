@@ -1,0 +1,104 @@
+scoreboard:
+  title: "&6&lYour Server &7[Practice]"
+
+  lobby:
+    lines:
+      - "&8&m--------------------"
+      - "&fOnline &8» &a%online%"
+      - "&fPlaying &8» &c%in_matches%"
+      - ""
+      - "&fPing &8» &a%ping%ms"
+      - "&fCoins &8» &6%atlas_coins%"
+      - "&fWins: &f» %atlaspractice_wins%"
+      - "&fLevel &8» &b%atlas_level%"
+      - ""
+      - "&6play.yourserver.net"
+      - "&8&m--------------------"
+
+  party:
+    lines:
+      - "&7&m------------------"
+      - "&b&lParty Status"
+      - "&eLeader: &f%party_leader%"
+      - "&eMembers: &f%party_size%/8"
+      - ""
+      - "&eState: &b%party_state%"
+      - "&7&m------------------"
+      - "&6play.yourserver.net"
+
+  match:
+    lines:
+      - "&7&m------------------"
+      - "&7Opponent: &b%opponent%"
+      - "&7Round: &b%round%"
+      - "&7Score: &b%score%"
+      - "&7Duration: &b%duration%"
+      - "&7Ping: &b%ping%ms"
+      - "&7&m------------------"
+      - "&6play.yourserver.net"
+
+  queuing:
+    lines:
+      - "&7&m------------------"
+      - "&eStatus: &bSearching..."
+      - "&eQueue Track: &fCasual Match"
+      - "&7&m------------------"
+      - "&6play.yourserver.net"
+
+  spectate:
+    lines:
+      - "&7&m------------------"
+      - "&eStatus: &7Spectating Match"
+      - "&7&m------------------"
+      - "&6play.yourserver.net"
+
+  bridge:
+    lines:
+      - "&7&m----------------"
+      - "&cRed"
+      - "&c%red_score%"
+      - "&9Blue"
+      - "&9%blue_score%"
+      - ""
+      - "&fDuration: &d%duration%"
+      - "&fPing: &d%ping%"
+      - "&7&m----------------"
+
+  battleRush:
+    lines:
+      - "&7&m----------------"
+      - "&cRed"
+      - "&c%red_score%"
+      - "&9Blue"
+      - "&9%blue_score%"
+      - ""
+      - "&fFirst to: &63 Goals"
+      - "&fDuration: &d%duration%"
+      - "&fPing: &d%ping%"
+      - "&7&m----------------"
+
+  special:
+    lines:
+      - "&7&m----------------"
+      - "&cRed Bed: %red_bed%"
+      - "&9Blue Bed: %blue_bed%"
+      - ""
+      - "&fYour Ping: &d%ping%"
+      - "&fEnemy Ping: &d%opponent_ping%"
+      - ""
+      - "&6play.yourserver.net"
+      - "&7&m----------------"
+
+  boxing:
+    lines:
+      - "&7"
+      - "&b&lFight"
+      - "&fRival: &b%opponent%"
+      - "&fDuration: &b%duration%"
+      - "&7"
+      - "&6&lHits"
+      - "&fYou: &e%your_hits%"
+      - "&fThem: &e%enemy_hits%"
+      - "&a%combo%"
+      - "&7"
+      - "&eplay.youserver.net"

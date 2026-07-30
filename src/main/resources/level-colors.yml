@@ -1,0 +1,13 @@
+# Color of level start and number after player ign.
+levels:
+  1-9: WHITE
+  10-19: GRAY
+  20-29: GREEN
+  30-39: AQUA
+  40-49: YELLOW
+  50-59: GOLD
+  60-69: RED
+  70-79: DARK_PURPLE
+  80-89: LIGHT_PURPLE
+  90-99: BLUE
+  100+: DARK_RED

@@ -1,0 +1,200 @@
+defaults:
+  price: 500
+  rarity: COMMON
+
+cosmetics:
+
+  KILL_EFFECT:
+    lightning:
+      price: 1000
+      rarity: RARE
+    explosion:
+      price: 1750
+      rarity: EPIC
+    flame_burst:
+      price: 2250
+      rarity: EPIC
+    heart_burst:
+      price: 2500
+      rarity: LEGENDARY
+    cloud_burst:
+      price: 1500
+      rarity: RARE
+    crit_explosion:
+      price: 3000
+      rarity: LEGENDARY
+    magic:
+      price: 3500
+      rarity: MYTHIC
+    portal:
+      price: 3000
+      rarity: LEGENDARY
+    smoke:
+      price: 750
+      rarity: COMMON
+    happy_villager:
+      price: 1800
+      rarity: RARE
+
+  VICTORY_EFFECT:
+    firework:
+      price: 1500
+      rarity: RARE
+    firework_rain:
+      price: 2500
+      rarity: EPIC
+    lightning_celebration:
+      price: 3000
+      rarity: LEGENDARY
+    flame_circle:
+      price: 1800
+      rarity: RARE
+    cloud_circle:
+      price: 1600
+      rarity: RARE
+    hearts:
+      price: 2200
+      rarity: EPIC
+    portal_spiral:
+      price: 3500
+      rarity: LEGENDARY
+    villager_celebration:
+      price: 1800
+      rarity: RARE
+    magic:
+      price: 4000
+      rarity: MYTHIC
+    smoke:
+      price: 1000
+      rarity: COMMON
+
+  PROJECTILE_TRAIL:
+    flame:
+      price: 800
+      rarity: COMMON
+    smoke:
+      price: 600
+      rarity: COMMON
+    heart:
+      price: 1200
+      rarity: UNCOMMON
+    portal:
+      price: 2500
+      rarity: EPIC
+    crit:
+      price: 1500
+      rarity: RARE
+    magic_crit:
+      price: 3200
+      rarity: LEGENDARY
+    cloud:
+      price: 1000
+      rarity: UNCOMMON
+    happy_villager:
+      price: 1800
+      rarity: RARE
+    redstone:
+      price: 1400
+      rarity: RARE
+    lava:
+      price: 3500
+      rarity: MYTHIC
+
+  WALKING_TRAIL:
+    heart_footsteps:
+      price: 1200
+      rarity: UNCOMMON
+    cloud_footsteps:
+      price: 900
+      rarity: COMMON
+    smoke_footsteps:
+      price: 700
+      rarity: COMMON
+    flame_footsteps:
+      price: 1800
+      rarity: RARE
+    crit_footsteps:
+      price: 2200
+      rarity: EPIC
+    portal_footsteps:
+      price: 2800
+      rarity: LEGENDARY
+    villager_footsteps:
+      price: 1700
+      rarity: RARE
+    magic_footsteps:
+      price: 3500
+      rarity: MYTHIC
+    lava_footsteps:
+      price: 4000
+      rarity: MYTHIC
+    snow_footsteps:
+      price: 1500
+      rarity: RARE
+
+  AURA:
+    flame:
+      price: 1800
+      rarity: RARE
+    heart:
+      price: 2000
+      rarity: EPIC
+    magic:
+      price: 3500
+      rarity: MYTHIC
+    portal:
+      price: 3000
+      rarity: LEGENDARY
+    cloud:
+      price: 1500
+      rarity: RARE
+    smoke:
+      price: 800
+      rarity: COMMON
+    crit:
+      price: 2200
+      rarity: EPIC
+    happy_villager:
+      price: 1800
+      rarity: RARE
+    lava:
+      price: 4200
+      rarity: MYTHIC
+    snow:
+      price: 1700
+      rarity: RARE
+
+  CHAT_COLOR:
+    gray:
+      price: 250
+      rarity: COMMON
+    dark_gray:
+      price: 400
+      rarity: COMMON
+    yellow:
+      price: 600
+      rarity: COMMON
+    gold:
+      price: 900
+      rarity: UNCOMMON
+    red:
+      price: 1200
+      rarity: RARE
+    dark_red:
+      price: 1800
+      rarity: EPIC
+    green:
+      price: 500
+      rarity: COMMON
+    dark_green:
+      price: 900
+      rarity: UNCOMMON
+    blue:
+      price: 1000
+      rarity: UNCOMMON
+    aqua:
+      price: 1200
+      rarity: RARE
+    light_purple:
+      price: 2000
+      rarity: EPIC
