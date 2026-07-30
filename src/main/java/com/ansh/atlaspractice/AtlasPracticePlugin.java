@@ -63,6 +63,8 @@ import com.ansh.atlaspractice.scoreboard.PracticeScoreboardAdapter;
 import com.ansh.atlaspractice.settings.PostMatchManager;
 import com.ansh.atlaspractice.tasks.QueueMatchmakingTask;
 import com.ansh.atlaspractice.tasks.ScoreboardUpdateTask;
+import com.ansh.atlaspractice.update.UpdateListener;
+import com.ansh.atlaspractice.update.VersionChecker;
 import com.ansh.atlaspractice.util.InventoryUtil;
 import com.ansh.atlaspractice.world.SlimeWorldService;
 import com.ansh.atlaspractice.world.WorldService;
@@ -110,6 +112,7 @@ public final class AtlasPracticePlugin extends JavaPlugin {
     private LevelManager levelManager;
     private ReplayManager replayManager;
     private WorldService worldService;
+    private VersionChecker versionChecker;
     private com.ansh.atlaspractice.config.RankedConfig rankedConfig;
     @Override
     public void onEnable() {
@@ -224,7 +227,7 @@ public final class AtlasPracticePlugin extends JavaPlugin {
             getServer().getPluginManager().registerEvents(new BridgeListener(this), this);
             Cosmetics.registerAll();
             cosmeticManager = new CosmeticManager();
-
+            getServer().getPluginManager().registerEvents(new UpdateListener(this), this);
             getServer().getPluginManager().registerEvents(new CosmeticListener(), this);
             getServer().getPluginManager().registerEvents(new ProjectileTrailListener(this), this);
             new LobbyCosmeticTask(this).runTaskTimer(this, 20L, 2L);
@@ -295,11 +298,9 @@ public final class AtlasPracticePlugin extends JavaPlugin {
                         new KitTabCompleter(this)
                 );
             }
-// Under your existing listener registrations in onEnable()
             Bukkit.getPluginManager().registerEvents(new com.ansh.atlaspractice.menus.SettingsMenu(this), this);
             Bukkit.getPluginManager().registerEvents(new com.ansh.atlaspractice.listeners.SettingsListener(this), this);
 
-            // Make sure you also instantiate the PostMatchManager!
             this.postMatchManager = new com.ansh.atlaspractice.settings.PostMatchManager(this);
             this.arenaRepository
                     .loadArenas(arenaManager);
@@ -338,6 +339,8 @@ public final class AtlasPracticePlugin extends JavaPlugin {
                     .getPluginManager()
                     .disablePlugin(this);
         }
+        versionChecker = new VersionChecker(this);
+        versionChecker.check();
     }
 
     @Override
@@ -467,6 +470,7 @@ public final class AtlasPracticePlugin extends JavaPlugin {
     public CooldownManager getCooldownManager() { return cooldownManager; }
     public ExplosionManager getExplosionManager() { return explosionManager; }
     public ReplayManager getReplayManager() { return replayManager; }
+    public VersionChecker getVersionChecker() {return versionChecker;}
     public WorldService getWorldService() { return worldService; }
     public com.ansh.atlaspractice.config.RankedConfig getRankedConfig() { return rankedConfig; }
 }
