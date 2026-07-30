@@ -109,6 +109,9 @@ permissions:
   atlaspractice.admin:
     default: op
 
+  atlaspractice.bot:
+    default: op
+
   atlaspractice.admin.arena:
     default: op
 
