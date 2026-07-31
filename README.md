@@ -205,6 +205,6 @@ Created by **Ansh Sharma**
 
 This project was developed over months through research, experimentation, debugging, and testing.
 
-AI Tool were used in making complex tasks like replay integration & swm integration.
+AI Tools were used in making achieving features like replay integration & swm integration.
 
 Thank you to everyone who tests, reports bugs, contributes, or supports the project ❤️
