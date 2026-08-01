@@ -63,11 +63,10 @@ commands:
     description: Manage packet holograms and leaderboards.
     permission: atlaspractice.admin
 
-# UNDER DEVELOPMENT
-#  bot:
-#    description: Fight a practice bot
-#    usage: /bot
-#    permission: atlaspractice.bot
+  bot:
+    description: Fight a practice bot
+    usage: /bot
+    permission: atlaspractice.bot
 
   arenaautosetup:
     description: Internal Atlas Practice auto setup hook
