@@ -277,6 +277,7 @@ public final class AtlasPracticePlugin extends JavaPlugin {
             this.registerCommand("accept", new com.ansh.atlaspractice.commands.AcceptCommand(this));
             registerCommand("deny", new DenyCommand(this));
             registerCommand("setlobbyspawn", spawnCommandExecutor);
+            registerCommand("bot", new BotFightCommand());
             registerCommand("spawn", spawnCommandExecutor);
             registerCommand(
                     "practice",
