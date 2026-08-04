@@ -10,6 +10,22 @@ AtlasPractice focuses on performance, customization, and ease of use while provi
 
 ---
 
+# 🚧 Upcoming Update (10 August)
+
+The next major update is planned for **10 August** and will focus on gameplay improvements, stability, and new content.
+
+### Planned Improvements
+
+- ✅ Party FFA fixes & improvements
+- 🤖 Practice Bots for:
+  - Boxing
+  - Sumo
+- ⚡ Various bug fixes and performance improvements
+- 🛏️ **Possible:** BedWars game mode *(work in progress, may be delayed if not ready)*
+
+> **Note:** Features marked as possible may be postponed to ensure update quality.
+---
+
 #  Features
 
 ##  Practice Modes
@@ -137,7 +153,7 @@ Optional:
 
 ---
 
-# 🚀 Commands
+#  Commands
 
 Some of the available commands include:
 
