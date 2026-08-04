@@ -219,7 +219,7 @@ special:
       enabled: true
       # Maximum distance (blocks) from the player to detect an incoming fireball.
       max-range: 4.0
-      # Maximum degrees off-centre the player's aim can be and still deflect.
+      # Maximum degrees off-centre the player's aim can be and still deflect.a
       max-angle: 35.0
       # Multiplier applied to fireball speed after deflection (1.0 = same speed).
       speed-multiplier: 1.0
