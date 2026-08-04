@@ -7,6 +7,8 @@ AtlasPractice focuses on performance, customization, and ease of use while provi
 > **Current Version:** 1.0.0
 > **Minecraft Version:** 1.8.8 (PandaSpigot/Spigot)
 > **Java:** 17
+>
+> **📅 Next Major Update:** 10 August
 
 ---
 
