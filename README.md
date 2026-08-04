@@ -17,7 +17,7 @@ The next major update is planned for **10 August** and will focus on gameplay im
 ### Planned Improvements
 
 - ✅ Party FFA fixes & improvements
-- 🤖 Practice Bots for:
+-  Practice Bots for:
   - Boxing
   - Sumo
 - ⚡ Various bug fixes and performance improvements
