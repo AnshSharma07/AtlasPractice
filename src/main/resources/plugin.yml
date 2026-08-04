@@ -63,6 +63,7 @@ commands:
     description: Manage packet holograms and leaderboards.
     permission: atlaspractice.admin
 
+# UNDER DEVELOPMENT
   bot:
     description: Fight a practice bot
     usage: /bot

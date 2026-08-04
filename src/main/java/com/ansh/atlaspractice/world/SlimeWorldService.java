@@ -19,7 +19,6 @@
  *
  * Project: https://github.com/AnshSharma07/AtlasPractice
  * Documentation: https://modularboyansh.xyz/atlas_docs
- * Guide: https://modularboyansh.xyz/atlas_help
  */
 
 package com.ansh.atlaspractice.world;
@@ -30,6 +29,7 @@ import com.ansh.atlaspractice.arena.ArenaState;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Constructor;
@@ -150,8 +150,25 @@ public final class SlimeWorldService implements WorldService {
         plugin.getLogger().info("[AtlasPractice] Deleting runtime world... unloading " + worldName);
         return supplySync(() -> {
             World world = Bukkit.getWorld(worldName);
-            if (world != null && !Bukkit.unloadWorld(world, save)) {
-                throw new IllegalStateException("Bukkit refused to unload world '" + worldName + "'.");
+            if (world != null) {
+
+                if (!world.getPlayers().isEmpty()) {
+                    plugin.getLogger().warning(
+                            "Cannot unload " + worldName +
+                                    " because " + world.getPlayers().size() +
+                                    " player(s) are still inside."
+                    );
+
+                    for (Player p : world.getPlayers()) {
+                        plugin.getLogger().warning(" - " + p.getName());
+                    }
+                }
+
+                if (!Bukkit.unloadWorld(world, save)) {
+                    throw new IllegalStateException(
+                            "Bukkit refused to unload world '" + worldName + "'."
+                    );
+                }
             }
             return null;
         });

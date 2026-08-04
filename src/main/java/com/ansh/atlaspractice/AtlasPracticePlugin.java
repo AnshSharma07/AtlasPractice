@@ -19,7 +19,6 @@
  *
  * Project: https://github.com/AnshSharma07/AtlasPractice
  * Documentation: https://modularboyansh.xyz/atlas_docs
- * Guide: https://modularboyansh.xyz/atlas_help
  */
 
 package com.ansh.atlaspractice;
@@ -127,6 +126,7 @@ public final class AtlasPracticePlugin extends JavaPlugin {
             this.sharedArenaService = new SharedArenaService(this);
             this.sharedArenaService.load();
             saveResource("scoreboard.yml", false);
+            saveResource("bot.yml", false);
             saveResource("shop.yml", false);
             saveResource("level-colors.yml", false);
             saveResource("kill-messages.yml", false);
@@ -236,6 +236,7 @@ public final class AtlasPracticePlugin extends JavaPlugin {
             registerCommand("duel", new DuelCommand(this, profileManager));
             registerCommand("party", new PartyCommand(this));
             registerCommand("xp", new XPCommand(this));
+            registerCommand("bot", new BotFightCommand());
             registerCommand("coins", new CoinsCommand(this));
             getServer().getPluginManager().registerEvents(new PortalListener(), this);
             registerCommand(
@@ -277,7 +278,6 @@ public final class AtlasPracticePlugin extends JavaPlugin {
             this.registerCommand("accept", new com.ansh.atlaspractice.commands.AcceptCommand(this));
             registerCommand("deny", new DenyCommand(this));
             registerCommand("setlobbyspawn", spawnCommandExecutor);
-            registerCommand("bot", new BotFightCommand());
             registerCommand("spawn", spawnCommandExecutor);
             registerCommand(
                     "practice",

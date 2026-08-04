@@ -19,7 +19,6 @@
  *
  * Project: https://github.com/AnshSharma07/AtlasPractice
  * Documentation: https://modularboyansh.xyz/atlas_docs
- * Guide: https://modularboyansh.xyz/atlas_help
  */
 // UNDER DEVELOPEMENT, disabled rn
 package com.ansh.atlaspractice.bots;
@@ -28,8 +27,10 @@ import com.ansh.atlaspractice.AtlasPracticePlugin;
 import com.ansh.atlaspractice.bots.npc.CitizensBotNPC;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
+import java.io.File;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -60,7 +61,10 @@ public final class BotManager {
 
 
     public void reloadConfig() {
-        FileConfiguration config = plugin.getConfig();
+        File botFile = new File(plugin.getDataFolder(), "bot.yml");
+        FileConfiguration config = botFile.exists()
+                ? YamlConfiguration.loadConfiguration(botFile)
+                : plugin.getConfig();
         for (BotDifficulty difficulty : BotDifficulty.values()) {
             difficulty.loadFromConfig(config);
         }
@@ -75,11 +79,14 @@ public final class BotManager {
     ) {
         removeBot(owner.getUniqueId());
 
-        FileConfiguration config = plugin.getConfig();
-        String botName       = config.getString("bot.name",           "AtlasBot");
-        String skinTexture   = config.getString("bot.skin",           "");
-        String skinSignature = config.getString("bot.skin-signature", "");
-        double eatThreshold  = config.getDouble("bot.eat-health",     10.0D);
+        File botFile = new File(plugin.getDataFolder(), "bot.yml");
+        FileConfiguration config = botFile.exists()
+                ? YamlConfiguration.loadConfiguration(botFile)
+                : plugin.getConfig();
+        String botName       = config.getString("name", config.getString("bot.name", "AtlasBot"));
+        String skinTexture   = config.getString("skin", config.getString("bot.skin", ""));
+        String skinSignature = config.getString("skin-signature", config.getString("bot.skin-signature", ""));
+        double eatThreshold  = config.getDouble("eat-health", config.getDouble("bot.eat-health", 10.0D));
 
         PracticeBot bot = new PracticeBot(
                 botUuid,

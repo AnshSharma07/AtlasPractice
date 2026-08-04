@@ -19,7 +19,6 @@
  *
  * Project: https://github.com/AnshSharma07/AtlasPractice
  * Documentation: https://modularboyansh.xyz/atlas_docs
- * Guide: https://modularboyansh.xyz/atlas_help
  */
 
 package com.ansh.atlaspractice.preset.impl;
@@ -75,25 +74,16 @@ public class DebuffPreset implements PresetKit {
         armor[3].addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
         armor[3].addEnchantment(Enchantment.DURABILITY, 3);
 
-        // =========================
-        // Inventory
-        // =========================
-
         ItemStack[] contents = new ItemStack[36];
 
-        // Sharp III Fire II Unbreaking III Sword
         ItemStack sword = new ItemStack(Material.DIAMOND_SWORD);
         sword.addEnchantment(Enchantment.DAMAGE_ALL, 3);
         sword.addEnchantment(Enchantment.DURABILITY, 3);
         sword.addEnchantment(Enchantment.FIRE_ASPECT, 2);
         contents[0] = sword;
 
-        // 16 Pearls
         contents[1] = new ItemStack(Material.ENDER_PEARL, 16);
 
-        // -------------------------
-        // Drinkable Speed II (1:30)
-        // -------------------------
         ItemStack speed = new ItemStack(Material.POTION, 1, (short) 8226);
 
         PotionMeta speedMeta = (PotionMeta) speed.getItemMeta();
@@ -118,10 +108,6 @@ public class DebuffPreset implements PresetKit {
         // -------------------------
         ItemStack heal = new ItemStack(Material.POTION, 1, (short) 16421);
 
-        // -------------------------
-        // Splash Slowness (1:07)
-        // Slowness I = -15% speed
-        // -------------------------
         ItemStack slow = new ItemStack(Material.POTION, 1, (short) 16394);
 
         PotionMeta slowMeta = (PotionMeta) slow.getItemMeta();
@@ -130,9 +116,6 @@ public class DebuffPreset implements PresetKit {
                 true);
         slow.setItemMeta(slowMeta);
 
-        // -------------------------
-        // Splash Poison (0:33)
-        // -------------------------
         ItemStack poison = new ItemStack(Material.POTION, 1, (short) 16420);
 
         PotionMeta poisonMeta = (PotionMeta) poison.getItemMeta();
@@ -141,9 +124,6 @@ public class DebuffPreset implements PresetKit {
                 true);
         poison.setItemMeta(poisonMeta);
 
-        // =========================
-        // Hotbar
-        // =========================
 
         contents[2] = speed.clone();
         contents[3] = fireRes.clone();
@@ -152,10 +132,6 @@ public class DebuffPreset implements PresetKit {
         contents[6] = poison.clone();
         contents[7] = heal.clone();
         contents[8] = new ItemStack(Material.COOKED_BEEF, 64);
-
-        // =========================
-        // Inventory
-        // =========================
 
         // 3 more Speed II (Total = 4)
         contents[9] = speed.clone();

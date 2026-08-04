@@ -19,7 +19,6 @@
  *
  * Project: https://github.com/AnshSharma07/AtlasPractice
  * Documentation: https://modularboyansh.xyz/atlas_docs
- * Guide: https://modularboyansh.xyz/atlas_help
  */
 
 package com.ansh.atlaspractice.listeners;
@@ -96,8 +95,7 @@ public final class PlayerCombatListener implements Listener {
             return;
         }
 
-        Match match = this.matchManager.getLiveMatch(attackerMatchId);
-        if (match.getKit().isComboMode()) {
+        Match match = this.matchManager.getLiveMatch(attackerMatchId);if (match.getKit().isComboMode()) {
             victim.setNoDamageTicks(0);
         }
         if (match == null
@@ -109,6 +107,8 @@ public final class PlayerCombatListener implements Listener {
         if (match.getKit().isComboMode()) {
             victim.setMaximumNoDamageTicks(5);
             victim.setNoDamageTicks(0);
+        } else if (victim.getMaximumNoDamageTicks() != 20) {
+            victim.setMaximumNoDamageTicks(20);
         }
         boolean noDamage = !match.getKit().isDamageEnabled();
         if (match.getTeams().size() > 1) {
@@ -142,7 +142,7 @@ public final class PlayerCombatListener implements Listener {
             }
 
             int hits = match.addBoxingHit(attacker.getUniqueId());
-// Combo handling
+// Combo
             match.getComboTracker().resetCombo(victim.getUniqueId());
 
             int combo =

@@ -19,7 +19,6 @@
  *
  * Project: https://github.com/AnshSharma07/AtlasPractice
  * Documentation: https://modularboyansh.xyz/atlas_docs
- * Guide: https://modularboyansh.xyz/atlas_help
  */
 
 package com.ansh.atlaspractice.party;
@@ -34,6 +33,7 @@ import com.ansh.atlaspractice.match.MatchTeam;
 import com.ansh.atlaspractice.profile.Profile;
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -135,9 +135,12 @@ public class PartyPvPMatch extends Match implements PartyManagedMatch {
                 for (PotionEffect effect : p.getActivePotionEffects()) {
                     p.removePotionEffect(effect.getType());
                 }
-                
-                for (Player online : Bukkit.getOnlinePlayers()) {
-                    p.showPlayer(online);
+
+                p.setGameMode(GameMode.SURVIVAL);p.setAllowFlight(false);
+                p.setFlying(false);
+
+                for (Player online : Bukkit.getOnlinePlayers()) {p.showPlayer(online);
+                    online.showPlayer(p);
                 }
 
                 Profile profile = AtlasPracticePlugin.getInstance().getProfileManager().getProfile(p.getUniqueId());

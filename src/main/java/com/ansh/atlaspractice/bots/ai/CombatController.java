@@ -19,7 +19,6 @@
  *
  * Project: https://github.com/AnshSharma07/AtlasPractice
  * Documentation: https://modularboyansh.xyz/atlas_docs
- * Guide: https://modularboyansh.xyz/atlas_help
  */
 
 package com.ansh.atlaspractice.bots.ai;
@@ -28,8 +27,7 @@ import com.ansh.atlaspractice.bots.BotDifficulty;
 import com.ansh.atlaspractice.bots.PracticeBot;
 import com.ansh.atlaspractice.bots.npc.CitizensBotNPC;
 import com.ansh.atlaspractice.match.Match;
-import net.minecraft.server.v1_8_R3.EntityPlayer;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import net.citizensnpcs.util.NMS;
 import org.bukkit.entity.Player;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -128,17 +126,15 @@ public final class CombatController {
             movementController.triggerFearPanic();
             return;
         }
-
+        if (isBoxing || (match != null && match.getKit() != null && match.getKit().isComboMode())) {
+            target.setNoDamageTicks(0);
+        }
         registerHit(now);
 
         if (ThreadLocalRandom.current().nextDouble() < difficulty.getSprintResetChance()) {
             movementController.triggerSprintReset();
         }
-
-        EntityPlayer attacker = botNPC.getEntityPlayer();
-        if (attacker != null) {
-            attacker.attack(((CraftPlayer) target).getHandle());
-        }
+        NMS.attack(botPlayer, target);
     }
 
     private void registerHit(long now) {

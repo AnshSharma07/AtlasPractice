@@ -19,7 +19,6 @@
  *
  * Project: https://github.com/AnshSharma07/AtlasPractice
  * Documentation: https://modularboyansh.xyz/atlas_docs
- * Guide: https://modularboyansh.xyz/atlas_help
  */
 
 package com.ansh.atlaspractice.match;
@@ -269,16 +268,10 @@ public abstract class Match {
                 }
             }
         }
-
-        broadcastMessage(
-                "§8[ATLAS]§a MATCH_START"
-        );
-
         broadcastMessage(
                 "§aThe match has officially begun! Good luck."
         );
     }
-
     public void end(MatchTeam winnerTeam) {
         System.out.println(
                 "[ATLAS-MATCH] END " +
@@ -310,25 +303,16 @@ public abstract class Match {
 
         this.state = MatchState.ENDING;
         disableHealthBelowName();
-        broadcastMessage(
-                "§8[ATLAS]§c MATCH_END"
-        );
         if (winnerTeam != null) {
 
             String kitId = getKit().getId();
-
             for (MatchTeam team : getTeams()) {
-
                 boolean won = team == winnerTeam;
-
                 for (MatchTeam.MatchPlayer matchPlayer : team.getPlayers()) {
-
                     Player player = Bukkit.getPlayer(matchPlayer.getUuid());
-
                     if (player == null) {
                         continue;
                     }
-
                     Profile profile = AtlasPracticePlugin.getInstance()
                             .getProfileManager()
                             .getProfile(player.getUniqueId());
@@ -377,23 +361,8 @@ public abstract class Match {
             return;
         }
 
-        // Boxing mode: count hits, do not deal real damage.
-        // BUG FIX #5:
-        // The original code called victim.setMaximumNoDamageTicks(0) which permanently
-        // zeroes the victim's max noDamageTicks for the rest of their session even after
-        // the match ends. This field is global to the EntityPlayer and is not reset on
-        // match end. Fix: zero out noDamageTicks (the current-ticks counter) only, and
-        // leave maxNoDamageTicks at its default (20). This still allows rapid hit
-        // registration because the bot clears the current ticks before each attack.
-        //
-        // Additionally, the original code reset victim health to 20.0 on every bot hit,
-        // which prevented the victim from being killed by the bot in non-boxing kit modes
-        // if isBoxingMode() was true. The health reset is correct for boxing (no death),
-        // but only the noDamageTicks fields must be handled, not maxNoDamageTicks.
         if (getKit().isBoxingMode()) {
             victim.setNoDamageTicks(0);
-            // Do NOT call victim.setMaximumNoDamageTicks(0) â€” it permanently breaks
-            // the victim's damage invincibility window for all future matches.
             victim.setHealth(20.0);
 
             int hits = addBoxingHit(bot.getBotNPC().getUuid());
@@ -403,7 +372,6 @@ public abstract class Match {
             if (botPlayer != null) {
                 botPlayer.sendMessage("§6Hits: §e" + hits + "§7/100");
             }
-
             victim.sendMessage(
                     "§c" + bot.getBukkitEntity().getName()
                             + " §7has §e"
@@ -431,8 +399,6 @@ public abstract class Match {
             return;
         }
 
-        // Normal combat: use NMS EntityPlayer.attack() which applies damage, knockback,
-        // and sprint-reset correctly.
         EntityPlayer attacker = bot.getBotNPC().getEntityPlayer();
         attacker.setSprinting(false);
         attacker.attack(((CraftPlayer) victim).getHandle());

@@ -19,7 +19,6 @@
  *
  * Project: https://github.com/AnshSharma07/AtlasPractice
  * Documentation: https://modularboyansh.xyz/atlas_docs
- * Guide: https://modularboyansh.xyz/atlas_help
  */
 
 package com.ansh.atlaspractice.profile;
@@ -77,7 +76,7 @@ public final class ProfileManager {
     public void saveAndUnloadProfile(UUID uuid) {
         Profile profile = this.profiles.remove(uuid);
         if (profile != null) {
-             this.plugin.getDatabaseService().saveProfileData(profile);
+            this.plugin.getDatabaseService().saveProfileDataAsync(profile);
         }
     }
 }

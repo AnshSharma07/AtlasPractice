@@ -19,7 +19,6 @@
  *
  * Project: https://github.com/AnshSharma07/AtlasPractice
  * Documentation: https://modularboyansh.xyz/atlas_docs
- * Guide: https://modularboyansh.xyz/atlas_help
  */
 
 package com.ansh.atlaspractice.party;
@@ -34,6 +33,7 @@ import com.ansh.atlaspractice.team.TeamColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -81,8 +81,7 @@ public final class PartyFFAMatch extends Match {
 
     @Override
     public void start() {
-        this.setState(MatchState.FIGHTING);
-        this.setStartTime(System.currentTimeMillis());
+        this.setState(MatchState.STARTING);
 
         if (this.getArena() != null) {
             this.getArena().setState(ArenaState.ALLOCATED);
@@ -122,6 +121,60 @@ public final class PartyFFAMatch extends Match {
         if (this.party != null) {
             this.party.setState(PartyState.FIGHTING);
         }
+        new BukkitRunnable() {
+
+            int countdown = 5;
+
+            @Override
+            public void run() {
+
+                if (countdown == 0) {
+
+                    setState(MatchState.FIGHTING);
+                    setStartTime(System.currentTimeMillis());
+                    for (MatchTeam team : getTeams()) {
+                        for (MatchTeam.MatchPlayer mp : team.getPlayers()) {
+                            Player player = Bukkit.getPlayer(mp.getUuid());
+                            if (player == null) {
+                                continue;
+                            }
+                            player.sendTitle("§a§lFIGHT!", "");
+                            player.playSound(player.getLocation(),
+                                    org.bukkit.Sound.NOTE_PLING,
+                                    1F,
+                                    2F);
+                        }
+                    }
+
+                    broadcastMessage("§a§lFight!");
+                    cancel();
+                    return;
+                }
+
+                for (MatchTeam team : getTeams()) {
+                    for (MatchTeam.MatchPlayer mp : team.getPlayers()) {
+
+                        Player player = Bukkit.getPlayer(mp.getUuid());
+
+                        if (player == null) {
+                            continue;
+                        }
+                        player.sendTitle(
+                                "§e" + countdown, "§7Prepare..."
+                        );
+
+                        player.playSound(player.getLocation(),
+                                org.bukkit.Sound.NOTE_PLING,
+                                1F,
+                                1F);
+                    }
+                }
+
+                countdown--;
+
+            }
+
+        }.runTaskTimer(AtlasPracticePlugin.getInstance(), 0L, 20L);
     }
 
     public void handleDeath(Player victim) {

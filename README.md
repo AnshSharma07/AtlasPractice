@@ -7,25 +7,7 @@ AtlasPractice focuses on performance, customization, and ease of use while provi
 > **Current Version:** 1.0.0
 > **Minecraft Version:** 1.8.8 (PandaSpigot/Spigot)
 > **Java:** 17
->
-> **📅 Next Major Update:** 10 August
 
----
-
-# 🚧 Upcoming Update (10 August)
-
-The next major update is planned for **10 August** and will focus on gameplay improvements, stability, and new content.
-
-### Planned Improvements
-
-- ✅ Party FFA fixes & improvements
--  Practice Bots for:
-  - Boxing
-  - Sumo
-- ⚡ Various bug fixes and performance improvements
-- 🛏️ **Possible:** BedWars game mode *(work in progress, may be delayed if not ready)*
-
-> **Note:** Features marked as possible may be postponed to ensure update quality.
 ---
 
 #  Features
@@ -155,7 +137,7 @@ Optional:
 
 ---
 
-#  Commands
+# 🚀 Commands
 
 Some of the available commands include:
 
@@ -223,6 +205,6 @@ Created by **Ansh Sharma**
 
 This project was developed over months through research, experimentation, debugging, and testing.
 
-AI Tools were used in making achieving features like replay integration & swm integration.
+AI Tool were used in making complex tasks like replay integration & swm integration.
 
 Thank you to everyone who tests, reports bugs, contributes, or supports the project ❤️

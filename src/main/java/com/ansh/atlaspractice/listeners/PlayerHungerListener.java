@@ -19,7 +19,6 @@
  *
  * Project: https://github.com/AnshSharma07/AtlasPractice
  * Documentation: https://modularboyansh.xyz/atlas_docs
- * Guide: https://modularboyansh.xyz/atlas_help
  */
 
 package com.ansh.atlaspractice.listeners;
@@ -68,7 +67,10 @@ public final class PlayerHungerListener implements Listener {
         if (match == null) {
             return;
         }
-
+        player.sendMessage(
+                "Kit=" + match.getKit().getId()
+                        + " Hunger=" + match.getKit().isHungerLossEnabled()
+        );
         if (!match.getKit().isHungerLossEnabled()) {
             event.setCancelled(true);
             player.setFoodLevel(20);

@@ -19,7 +19,6 @@
  *
  * Project: https://github.com/AnshSharma07/AtlasPractice
  * Documentation: https://modularboyansh.xyz/atlas_docs
- * Guide: https://modularboyansh.xyz/atlas_help
  */
 
 package com.ansh.atlaspractice.listeners;
@@ -76,11 +75,6 @@ public final class LobbyItemInteractListener implements Listener {
         if (name.contains("Cosmetics")) {
             event.setCancelled(true);
             Bukkit.dispatchCommand(player, "cosmetics");
-            return;
-        }
-        if (name.contains("Party")) {
-            event.setCancelled(true);
-            Bukkit.dispatchCommand(player, "party create");
             return;
         }
         if (name.contains("Bot Fight")) {

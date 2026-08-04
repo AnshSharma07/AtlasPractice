@@ -19,7 +19,6 @@
  *
  * Project: https://github.com/AnshSharma07/AtlasPractice
  * Documentation: https://modularboyansh.xyz/atlas_docs
- * Guide: https://modularboyansh.xyz/atlas_help
  */
 
 package com.ansh.atlaspractice.match;
@@ -83,13 +82,29 @@ public final class MatchManager implements Listener {
     }
 
     private void teleportToLobby(Player player) {
+
+        player.getActivePotionEffects().forEach(effect ->
+                player.removePotionEffect(effect.getType()));
+
+        player.setFireTicks(0);
+        player.setFallDistance(0.0F);
+        player.setNoDamageTicks(0);
+
         if (plugin.getConfig().contains("lobby-spawn.world")) {
             World world = Bukkit.getWorld(plugin.getConfig().getString("lobby-spawn.world"));
             if (world != null) {
-                player.teleport(new Location(world, plugin.getConfig().getDouble("lobby-spawn.x"), plugin.getConfig().getDouble("lobby-spawn.y"), plugin.getConfig().getDouble("lobby-spawn.z"), (float) plugin.getConfig().getDouble("lobby-spawn.yaw"), (float) plugin.getConfig().getDouble("lobby-spawn.pitch")));
+                player.teleport(new Location(
+                        world,
+                        plugin.getConfig().getDouble("lobby-spawn.x"),
+                        plugin.getConfig().getDouble("lobby-spawn.y"),
+                        plugin.getConfig().getDouble("lobby-spawn.z"),
+                        (float) plugin.getConfig().getDouble("lobby-spawn.yaw"),
+                        (float) plugin.getConfig().getDouble("lobby-spawn.pitch")
+                ));
                 return;
             }
         }
+
         player.teleport(player.getWorld().getSpawnLocation());
     }
 
@@ -98,7 +113,10 @@ public final class MatchManager implements Listener {
         if (profile == null) return;
 
         UUID matchId = profile.getActiveMatchId();
-        Match match = liveMatchesMap.get(matchId);
+        Match match = null;
+        if (matchId != null) {
+            match = liveMatchesMap.get(matchId);
+        }
         if (match != null) {
             match.getSpectators().remove(player.getUniqueId());
             match.getTeams().forEach(team -> team.getPlayers().forEach(mp -> {
@@ -109,9 +127,13 @@ public final class MatchManager implements Listener {
 
         profile.clearTemporaryMatchState();
         player.getInventory().clear();
+        player.setGameMode(org.bukkit.GameMode.SURVIVAL);
         player.setAllowFlight(false);
         player.setFlying(false);
-
+        for (Player online : Bukkit.getOnlinePlayers()) {
+            player.showPlayer(online);
+            online.showPlayer(player);
+        }
         if (profile.getPartyId() != null) {
             profile.setState(ProfileState.PARTY);
             plugin.getInventoryUtil().applyPartyHotbarItems(player);
@@ -341,6 +363,13 @@ public final class MatchManager implements Listener {
 
                 if (blue != null) {
                     blue.removeEntry(player.getName());
+                }
+                player.setGameMode(org.bukkit.GameMode.SURVIVAL);
+                player.setAllowFlight(false);
+                player.setFlying(false);
+                for (Player online : Bukkit.getOnlinePlayers()) {
+                    player.showPlayer(online);
+                    online.showPlayer(player);
                 }
                 teleportToLobby(player);
 

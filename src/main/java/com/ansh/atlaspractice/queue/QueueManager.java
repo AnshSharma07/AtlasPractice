@@ -19,7 +19,6 @@
  *
  * Project: https://github.com/AnshSharma07/AtlasPractice
  * Documentation: https://modularboyansh.xyz/atlas_docs
- * Guide: https://modularboyansh.xyz/atlas_help
  */
 
 package com.ansh.atlaspractice.queue;
@@ -50,7 +49,7 @@ public final class QueueManager {
     public void joinUnrankedQueue(Player player, Kit kit) {
         Profile profile = this.plugin.getProfileManager().getProfile(player.getUniqueId());
         if (profile == null || profile.getState() != ProfileState.LOBBY) {
-            player.sendMessage("§cYou cannot enter a matchmaking queue right now.");
+            player.sendMessage("§cInteraction Failed.");
             return;
         }
         boolean hasArena = !plugin.getSharedArenaService().getAvailableArenaPool(kit).isEmpty();
@@ -161,7 +160,7 @@ public final class QueueManager {
             }
             player.getInventory().clear();
             this.plugin.getInventoryUtil().applyLobbyHotbarItems(player);
-            player.sendMessage("§cYou left the matchmaking queue.");
+            player.sendMessage("§cYou left the queue.");
         }
     }
 }

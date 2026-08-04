@@ -19,12 +19,12 @@
  *
  * Project: https://github.com/AnshSharma07/AtlasPractice
  * Documentation: https://modularboyansh.xyz/atlas_docs
- * Guide: https://modularboyansh.xyz/atlas_help
  */
 // UNDER DEVELOPEMENT, disabled rn
 package com.ansh.atlaspractice.bots.npc;
 
 import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.ai.NavigatorParameters;
 import net.citizensnpcs.api.event.DespawnReason;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
@@ -91,14 +91,19 @@ public final class CitizensBotNPC {
         }
 
         npc.setProtected(false);
-
+        npc.setUseMinecraftAI(false);
+        npc.data().setPersistent(NPC.Metadata.SHOULD_SAVE, false);
         npc.data().setPersistent(NPC.Metadata.REMOVE_FROM_PLAYERLIST, true);
-
+        npc.data().setPersistent(NPC.Metadata.DEFAULT_PROTECTED, false);
+        npc.data().setPersistent(NPC.Metadata.TARGETABLE, true);
+        npc.data().setPersistent(NPC.Metadata.DAMAGE_OTHERS, true);
         npc.data().setPersistent(NPC.Metadata.COLLIDABLE, true);
 
-        npc.getNavigator().getDefaultParameters()
-           .stuckAction(null)
+        NavigatorParameters params = npc.getNavigator().getDefaultParameters();
+        params.stuckAction(null)
            .speedModifier(1.0F)
+                .attackRange(3.15D)
+                .attackDelayTicks(0)
            .range(64F);
     }
 
@@ -208,7 +213,18 @@ public final class CitizensBotNPC {
         if (armor.length > 3 && armor[3] != null) equip.set(EquipmentSlot.HELMET,     armor[3]);
     }
 
-    public void updateEquipment() { }
+    public void updateEquipment() {
+        Player p = getBukkitEntity();
+        if (p == null) return;
+
+        Equipment equip = npc.getOrAddTrait(Equipment.class);
+        equip.set(EquipmentSlot.HAND, p.getItemInHand());
+        ItemStack[] armor = p.getInventory().getArmorContents();
+        if (armor.length > 0) equip.set(EquipmentSlot.BOOTS, armor[0]);
+        if (armor.length > 1) equip.set(EquipmentSlot.LEGGINGS, armor[1]);
+        if (armor.length > 2) equip.set(EquipmentSlot.CHESTPLATE, armor[2]);
+        if (armor.length > 3) equip.set(EquipmentSlot.HELMET, armor[3]);
+    }
     public void swingArm() {
         if (!isSpawned()) return;
         EntityPlayer handle = handle();
