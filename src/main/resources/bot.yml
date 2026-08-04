@@ -1,0 +1,79 @@
+# AtlasPractice PvP bot configuration.
+# Add as many difficulties under difficulties as you want. Built-in menus use the
+# enum names but the AI loader also accepts these keys for future expansion.
+enabled: true
+debug: false
+name: AtlasBot
+skin: ""
+skin-signature: ""
+eat-health: 10.0
+
+# Personalities multiply or offset difficulty values so bots feel different.
+personalities:
+  passive: {aggression: 0.65, combo-chance: 0.75, wtap-chance: 0.6, random-stop-chance: 1.4}
+  aggressive: {aggression: 1.25, combo-chance: 1.15, sprint-reset-chance: 1.2, retreat-health: 0.7}
+  combo: {combo-chance: 1.45, aim-speed: 1.1, hit-accuracy: 1.1, anti-loop-strength: 1.1}
+  wtap: {wtap-chance: 1.6, sprint-reset-chance: 1.5, blockhit-chance: 0.8}
+  legit: {random-look-offset: 1.0, random-miss-chance: 1.0, hit-accuracy: 1.0}
+  jitter: {min-cps: 1.15, max-cps: 1.25, random-look-offset: 1.3, hit-accuracy: 0.95}
+  bridge: {strafe-speed: 1.2, jump-frequency: 1.2, anti-loop-strength: 1.4}
+  tank: {retreat-health: 0.55, aggression: 1.1, random-stop-chance: 0.75}
+  random: {random-look-offset: 1.6, random-miss-chance: 1.5, random-stop-chance: 1.5}
+  godlike: {reaction-time: 0.65, hit-accuracy: 1.25, prediction-strength: 1.35, anti-loop-strength: 1.35}
+
+# Options per difficulty:
+# reaction-time: extra click delay in ms; min-cps/max-cps: variable click range.
+# reach: max melee reach; aim-speed: rotation smoothing; strafe-speed: movement speed.
+# jump-frequency: chance to jump/jump-reset; combo-chance: chance to continue pressure.
+# sprint-reset-chance/wtap-chance/blockhit-chance: knockback reset behaviours.
+# hit-accuracy/random-miss-chance/random-look-offset: human aim and click mistakes.
+# rod-delay/pearl-delay: minimum ms between utility uses.
+# random-stop-chance: brief hesitation chance; aggression: chase vs hold distance.
+# retreat-health: health to start healing/escaping; target-switch-delay: ms before retarget.
+# prediction-strength: future target lead; anti-loop-strength: wall/corner avoidance.
+difficulties:
+  easy: &easy
+    reaction-time: 240
+    min-cps: 4
+    max-cps: 7
+    reach: 2.95
+    aim-speed: 0.10
+    strafe-speed: 0.55
+    jump-frequency: 0.05
+    combo-chance: 0.20
+    sprint-reset-chance: 0.00
+    hit-accuracy: 0.75
+    blockhit-chance: 0.00
+    wtap-chance: 0.05
+    rod-delay: 900
+    pearl-delay: 5000
+    random-look-offset: 3.5
+    random-stop-chance: 0.25
+    random-miss-chance: 0.25
+    aggression: 0.45
+    retreat-health: 8.0
+    target-switch-delay: 2000
+    prediction-strength: 0.5
+    anti-loop-strength: 0.5
+  normal:
+    <<: *easy
+    reaction-time: 130
+    min-cps: 7
+    max-cps: 10
+    reach: 3.02
+    aim-speed: 0.20
+    strafe-speed: 0.80
+    hit-accuracy: 0.88
+  hard:
+    <<: *easy
+    reaction-time: 72
+    min-cps: 10
+    max-cps: 13
+    reach: 3.08
+    aim-speed: 0.35
+    strafe-speed: 0.95
+    hit-accuracy: 0.94
+  expert: {reaction-time: 55, min-cps: 11, max-cps: 14, reach: 3.10, aim-speed: 0.45, strafe-speed: 1.00, jump-frequency: 0.15, combo-chance: 0.75, sprint-reset-chance: 0.65, hit-accuracy: 0.96, blockhit-chance: 0.35, wtap-chance: 0.45, rod-delay: 450, pearl-delay: 2500, random-look-offset: 0.4, random-stop-chance: 0.04, random-miss-chance: 0.04, aggression: 0.85, retreat-health: 6.0, target-switch-delay: 900, prediction-strength: 2.8, anti-loop-strength: 2.6}
+  master: {reaction-time: 42, min-cps: 12, max-cps: 15, reach: 3.10, aim-speed: 0.55, strafe-speed: 1.05, jump-frequency: 0.17, combo-chance: 0.85, sprint-reset-chance: 0.75, hit-accuracy: 0.98, blockhit-chance: 0.45, wtap-chance: 0.55, rod-delay: 380, pearl-delay: 2200, random-look-offset: 0.2, random-stop-chance: 0.02, random-miss-chance: 0.02, aggression: 0.95, retreat-health: 5.0, target-switch-delay: 700, prediction-strength: 3.4, anti-loop-strength: 3.2}
+  grandmaster: {reaction-time: 34, min-cps: 13, max-cps: 16, reach: 3.10, aim-speed: 0.75, strafe-speed: 1.08, jump-frequency: 0.18, combo-chance: 0.92, sprint-reset-chance: 0.85, hit-accuracy: 0.99, blockhit-chance: 0.55, wtap-chance: 0.65, rod-delay: 320, pearl-delay: 2000, random-look-offset: 0.1, random-stop-chance: 0.01, random-miss-chance: 0.01, aggression: 1.0, retreat-health: 4.5, target-switch-delay: 550, prediction-strength: 3.8, anti-loop-strength: 3.6}
+  impossible: {reaction-time: 28, min-cps: 14, max-cps: 16, reach: 3.10, aim-speed: 1.00, strafe-speed: 1.10, jump-frequency: 0.18, combo-chance: 1.00, sprint-reset-chance: 0.95, hit-accuracy: 1.00, blockhit-chance: 0.65, wtap-chance: 0.85, rod-delay: 250, pearl-delay: 1800, random-look-offset: 0.0, random-stop-chance: 0.0, random-miss-chance: 0.0, aggression: 1.0, retreat-health: 4.0, target-switch-delay: 400, prediction-strength: 4.0, anti-loop-strength: 4.0}
