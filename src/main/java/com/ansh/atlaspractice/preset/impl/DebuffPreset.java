@@ -52,10 +52,6 @@ public class DebuffPreset implements PresetKit {
     @Override
     public void setup(Kit kit) {
 
-        // =========================
-        // Armor
-        // =========================
-
         ItemStack[] armor = new ItemStack[4];
 
         armor[0] = new ItemStack(Material.DIAMOND_BOOTS);
@@ -92,9 +88,6 @@ public class DebuffPreset implements PresetKit {
                 true);
         speed.setItemMeta(speedMeta);
 
-        // -------------------------
-        // Fire Resistance (3:00)
-        // -------------------------
         ItemStack fireRes = new ItemStack(Material.POTION, 1, (short) 8259);
 
         PotionMeta fireMeta = (PotionMeta) fireRes.getItemMeta();
@@ -103,9 +96,7 @@ public class DebuffPreset implements PresetKit {
                 true);
         fireRes.setItemMeta(fireMeta);
 
-        // -------------------------
-        // Splash Instant Health II
-        // -------------------------
+
         ItemStack heal = new ItemStack(Material.POTION, 1, (short) 16421);
 
         ItemStack slow = new ItemStack(Material.POTION, 1, (short) 16394);

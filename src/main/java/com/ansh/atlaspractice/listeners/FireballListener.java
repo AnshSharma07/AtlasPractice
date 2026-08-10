@@ -71,9 +71,6 @@ public final class FireballListener implements Listener {
         this.plugin = plugin;
     }
 
-    // -----------------------------------------------------------------------
-    // Throwing
-    // -----------------------------------------------------------------------
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onFireballThrow(PlayerInteractEvent event) {
@@ -122,9 +119,6 @@ public final class FireballListener implements Listener {
                 plugin.getExplosionConfig().getFireballCooldownTicks());
     }
 
-    // -----------------------------------------------------------------------
-    // Bounce-back
-    // -----------------------------------------------------------------------
 
     /**
      * Left-click to deflect an incoming fireball that was shot by an opponent.
@@ -225,9 +219,6 @@ public final class FireballListener implements Listener {
         return best;
     }
 
-    // -----------------------------------------------------------------------
-    // Explosion suppression
-    // -----------------------------------------------------------------------
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onExplosionPrime(ExplosionPrimeEvent event) {
@@ -252,9 +243,6 @@ public final class FireballListener implements Listener {
         }
     }
 
-    // -----------------------------------------------------------------------
-    // Utility
-    // -----------------------------------------------------------------------
 
     private Fireball launchFireball(Player shooter, Vector direction, double speed) {
         Fireball fireball = (Fireball) shooter.getWorld().spawnEntity(

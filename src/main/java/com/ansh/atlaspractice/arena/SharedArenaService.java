@@ -125,9 +125,6 @@ public final class SharedArenaService {
         this.plugin = plugin;
     }
 
-    // -----------------------------------------------------------------------
-    // Lifecycle
-    // -----------------------------------------------------------------------
 
     public void load() {
         addConfigDefaults();
@@ -165,11 +162,6 @@ public final class SharedArenaService {
         plugin.getConfig().options().copyDefaults(true);
         plugin.saveConfig();
     }
-
-    // -----------------------------------------------------------------------
-    // Legacy migration
-    // -----------------------------------------------------------------------
-
     /**
      * Returns {@code true} when the YAML file contains the legacy single
      * {@code groups.shared} pool and does NOT already have any per-mode group.
@@ -219,9 +211,6 @@ public final class SharedArenaService {
         }
     }
 
-    // -----------------------------------------------------------------------
-    // Persistence
-    // -----------------------------------------------------------------------
 
     public void save() {
         if (storageFile == null) {
@@ -240,9 +229,6 @@ public final class SharedArenaService {
         }
     }
 
-    // -----------------------------------------------------------------------
-    // Public API
-    // -----------------------------------------------------------------------
 
     public boolean isEnabled() {
         return enabled;
@@ -252,7 +238,6 @@ public final class SharedArenaService {
         return enabled && kit != null && enabledModes.contains(kit.getId().toLowerCase());
     }
 
-    // --- Mode-keyed operations ---
 
     /**
      * Assigns {@code arenaId} to the shared pool for {@code mode}.
@@ -312,21 +297,17 @@ public final class SharedArenaService {
         return group != null && group.getArenaIds().stream().anyMatch(id -> id.equalsIgnoreCase(arenaId));
     }
 
-    // --- Kit-based overloads (convenience wrappers) ---
 
     public boolean assignArena(Kit kit, String arenaId) {
         return kit != null && assignArena(kit.getId(), arenaId);
     }
-
     public boolean removeArena(Kit kit, String arenaId) {
         return kit != null && removeArena(kit.getId(), arenaId);
     }
-
     public boolean isAssigned(Kit kit, String arenaId) {
         return kit != null && isAssigned(kit.getId(), arenaId);
     }
 
-    // --- Getters ---
 
     /**
      * Returns the arena IDs assigned to the shared pool for the given mode.

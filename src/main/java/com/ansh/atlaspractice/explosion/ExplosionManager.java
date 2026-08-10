@@ -63,10 +63,6 @@ public final class ExplosionManager {
         this.plugin = plugin;
     }
 
-    // -----------------------------------------------------------------------
-    // Public API
-    // -----------------------------------------------------------------------
-
     public void createCustomExplosion(Location loc, ExplosionType type, Entity source) {
         ExplosionConfig cfg = plugin.getExplosionConfig();
 
@@ -97,10 +93,6 @@ public final class ExplosionManager {
         // --- Player knockback (Minemen-style) ---
         applyKnockback(loc, radius, knockback, type, source, match);
     }
-
-    // -----------------------------------------------------------------------
-    // Internal helpers
-    // -----------------------------------------------------------------------
 
     /** Finds the {@link Match} associated with the explosion source. */
     private Optional<Match> resolveMatch(Location loc, Entity source) {
@@ -167,17 +159,6 @@ public final class ExplosionManager {
         }
     }
 
-    /**
-     * Applies Minemen-style knockback to all players in the match within range.
-     *
-     * <p>Key differences from vanilla:
-     * <ul>
-     *   <li>Force curve: {@code (1 - dist/radius)^0.5} — snappier drop-off.</li>
-     *   <li>Blast vector is <em>added</em> to existing velocity, not mixed in
-     *       at a dampened ratio, so momentum accumulates naturally.</li>
-     *   <li>Vertical component is stronger and more consistent across distances.</li>
-     * </ul>
-     */
     private void applyKnockback(Location loc, double radius, double knockback,
                                 ExplosionType type, Entity source, Match match) {
 
