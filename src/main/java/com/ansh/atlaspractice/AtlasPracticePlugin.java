@@ -176,6 +176,8 @@ public final class AtlasPracticePlugin extends JavaPlugin {
                     new ArenaBreakableListener(this),
                     this
             );
+            registerCommand("ranked", new RankedCommand(this));
+            registerCommand("unranked", new UnrankedCommand(this));
             getServer().getPluginManager().registerEvents(
                     new LobbyItemInteractListener(this),
                     this

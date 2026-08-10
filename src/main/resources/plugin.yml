@@ -13,6 +13,12 @@ commands:
   duel:
     description: Challenge another player to a duel.
 
+  ranked:
+    description: Open the ranked queue menu.
+
+  unranked:
+    description: Open the unranked queue menu.
+
   kitlayout:
     description: Edit Kit as per your preference.
 
