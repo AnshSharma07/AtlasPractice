@@ -122,6 +122,10 @@ Supported integrations include:
 
 ---
 
+## ⚠️ Currently Atlas Practice is not made to Co-exist with other major mini-games plugins.
+
+
+---
 # 📦 Requirements
 
 * Java 17
@@ -134,31 +138,6 @@ Optional:
 
 * AdvancedReplay
 * AtlasMore
-
----
-
-# 🚀 Commands
-
-Some of the available commands include:
-
-```
-/duel
-/party
-/stats
-/spec
-/randomqueue
-/cosmetics
-/practice
-/practiceadmin
-/toolazytocreatekits 
-/arena
-/kit
-/atlasleaderboard
-/spawn
-/setlobbyspawn
-```
-
-Additional administrative commands are available for setup and configuration.
 
 ---
 
