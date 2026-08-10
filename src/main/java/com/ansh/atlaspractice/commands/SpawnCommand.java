@@ -66,14 +66,11 @@ public final class SpawnCommand implements CommandExecutor {
             player.sendMessage("§aLobby spawn point successfully updated!");
             return true;
         }
-
-        // handler /spawn
         if (label.equalsIgnoreCase("spawn")) {
             Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
-            
-            // Check if the player is inside an active match
+
             if (profile != null && profile.getState() == ProfileState.MATCH) {
-                player.sendMessage("§cYou are not allowed to use the command during Match.");
+                player.sendMessage("§cUse /leave to quit the match. Might affect your stats!");
                 return true;
             }
 

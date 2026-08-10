@@ -62,12 +62,11 @@ public class PresetKitCreateCommand implements CommandExecutor {
 
         Kit kit = new Kit(preset.getId(), preset.getDisplayName());
 
-        // Get the full icon configuration from the implementation class
         ItemStack icon = preset.getDisplayIcon();
         if (icon != null) {
             kit.setDisplayMaterial(icon.getType());
             kit.setIconMaterial(icon.getType());
-            kit.setIconData(icon.getDurability()); // Captures potion type/durability values!
+            kit.setIconData(icon.getDurability()); //  potion type/durability values!
         }
 
         // Setup inventory items

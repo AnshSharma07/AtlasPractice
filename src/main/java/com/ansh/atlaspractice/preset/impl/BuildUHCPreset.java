@@ -20,7 +20,7 @@
  * Project: https://github.com/AnshSharma07/AtlasPractice
  * Documentation: https://modularboyansh.xyz/atlas_docs
  */
-
+// THESE KITS CODES ARE COMPLETED WITH THE HELP OF AI TO SKIP BASIC REPEATED STUFF
 package com.ansh.atlaspractice.preset.impl;
 
 import org.bukkit.ChatColor;
@@ -79,24 +79,21 @@ public class BuildUHCPreset implements PresetKit {
         contents[5] = new ItemStack(Material.COOKED_BEEF, 64); // 64 Steak
         contents[6] = new ItemStack(Material.GOLDEN_APPLE, 6);  // 6 Golden Apples
 
-        // ==========================================
+// ==========================================
 // Golden Head (10s Regen, No Instant Heal)
 // ==========================================
         ItemStack goldenHead10s = new ItemStack(Material.GOLDEN_APPLE, 3);
         ItemMeta head10sMeta = goldenHead10s.getItemMeta();
         head10sMeta.setDisplayName(ChatColor.GOLD + "Golden Head");
 
-// Add a hidden lore line to tell the listener to use the 10-second rule
         head10sMeta.setLore(java.util.Arrays.asList(ChatColor.BLACK + "10s_Regen"));
         goldenHead10s.setItemMeta(head10sMeta);
 
         contents[7] = goldenHead10s;
 
-        // Building Blocks
         contents[8] = new ItemStack(Material.COBBLESTONE, 64);
         contents[9] = new ItemStack(Material.WOOD, 64); // Oak Planks in 1.8
 
-        // Buckets
         contents[10] = new ItemStack(Material.LAVA_BUCKET);
         contents[11] = new ItemStack(Material.LAVA_BUCKET);
         contents[12] = new ItemStack(Material.WATER_BUCKET);

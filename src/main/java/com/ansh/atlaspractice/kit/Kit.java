@@ -51,7 +51,6 @@ public final class Kit {
     private boolean comboMode = false;
     private boolean rankedEnabled;
     private boolean buildAllowed;
-
     public Kit createClone() {
         Kit clone = new Kit(this.id, this.displayName);
         clone.setMainContents(this.mainContents.clone());

@@ -20,7 +20,7 @@
  * Project: https://github.com/AnshSharma07/AtlasPractice
  * Documentation: https://modularboyansh.xyz/atlas_docs
  */
-
+// THESE KITS CODES ARE COMPLETED WITH THE HELP OF AI TO SKIP BASIC REPEATED STUFF
 package com.ansh.atlaspractice.preset.impl;
 
 import com.ansh.atlaspractice.kit.Kit;

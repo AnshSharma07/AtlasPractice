@@ -20,7 +20,7 @@
  * Project: https://github.com/AnshSharma07/AtlasPractice
  * Documentation: https://modularboyansh.xyz/atlas_docs
  */
-
+// THESE KITS CODES ARE COMPLETED WITH THE HELP OF AI TO SKIP BASIC REPEATED STUFF
 package com.ansh.atlaspractice.preset.impl;
 
 import org.bukkit.Material;
@@ -40,29 +40,19 @@ public class PearlFightPreset implements PresetKit {
     }
     @Override
     public void setup(Kit kit) {
-        // Armor (Left empty as per your setup)
         ItemStack[] armor = new ItemStack[4];
 
-        // Inventory
         ItemStack[] contents = new ItemStack[36];
 
-        // Slot 0: Stick (Knockback 1)
         ItemStack kbStick = new ItemStack(Material.STICK);
-        kbStick.addEnchantment(Enchantment.KNOCKBACK, 1);
+        kbStick.addUnsafeEnchantment(Enchantment.KNOCKBACK, 2);
         contents[0] = kbStick;
 
-        // Slot 1: 8 Ender Pearls
         contents[1] = new ItemStack(Material.ENDER_PEARL, 8);
 
-        // Slot 2: 16 Wool
         contents[2] = new ItemStack(Material.WOOL, 16);
 
-        // Slot 3: 1 Shears
         contents[3] = new ItemStack(Material.SHEARS, 1);
-
-        // Effects
-        // Metadata
-
         kit.setArmorContents(armor);
         kit.setMainContents(contents);
         kit.setHungerLossEnabled(false);
