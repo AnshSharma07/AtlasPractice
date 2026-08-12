@@ -44,6 +44,11 @@ public final class DataMigrationHandler {
             // Table 1: Profiles Table
             try {
                 statement.executeUpdate(
+                        "ALTER TABLE atlas_profiles ADD COLUMN map_selection_preference TEXT NOT NULL DEFAULT 'NONE';"
+                );
+            } catch (SQLException ignored) {}
+            try {
+                statement.executeUpdate(
                         "ALTER TABLE atlas_profiles ADD COLUMN allow_duels INT NOT NULL DEFAULT 1;");
             } catch (SQLException ignored) {}
 
@@ -103,7 +108,7 @@ CREATE TABLE IF NOT EXISTS atlas_profiles (
 allow_duels INT NOT NULL DEFAULT 1,
 allow_party_invites INT NOT NULL DEFAULT 1,
 scoreboard_visible INT NOT NULL DEFAULT 1,
-
+map_selection_preference TEXT NOT NULL DEFAULT 'NONE',
 scoreboard_enabled INT NOT NULL DEFAULT 1,
 time_mode TEXT NOT NULL DEFAULT 'SERVER',
 chat_mode TEXT NOT NULL DEFAULT 'ALL',
@@ -125,7 +130,6 @@ last_daily_login TEXT NOT NULL DEFAULT '',
 first_login TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 """);
-            // Ensure older databases get the new columns without dropping the table
             try { statement.executeUpdate("ALTER TABLE atlas_profile_stats ADD COLUMN kills INT NOT NULL DEFAULT 0;"); } catch (SQLException ignored) {}
             try { statement.executeUpdate("ALTER TABLE atlas_profile_stats ADD COLUMN deaths INT NOT NULL DEFAULT 0;"); } catch (SQLException ignored) {}
             try { statement.executeUpdate("ALTER TABLE atlas_profile_stats ADD COLUMN matches INT NOT NULL DEFAULT 0;"); } catch (SQLException ignored) {}

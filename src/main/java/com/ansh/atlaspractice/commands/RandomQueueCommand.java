@@ -42,11 +42,12 @@ public class RandomQueueCommand implements CommandExecutor {
     private final Random random = new Random();
 
     /*
-     * Just edit this list whenever you want.
-     * Add/remove kit IDs only.
+     * was mainly added to test the capabilities and performance with Mineflayer bots, currently this
+     * command still exists to test the plugin.
      */
     private static final String[] RANDOM_KITS = {
             "boxing"
+
     };
 
     public RandomQueueCommand(AtlasPracticePlugin plugin) {

@@ -36,25 +36,21 @@ public final class Profile {
     private boolean allowDuels = true;
     private boolean scoreboardVisible = true;
     private boolean allowPartyInvites = true;
-    // --- NEW SETTINGS FIELDS ---
     private boolean scoreboardEnabled = true;
+    private com.ansh.atlaspractice.settings.MapSelectionPreference mapSelectionPreference = com.ansh.atlaspractice.settings.MapSelectionPreference.NONE;
     private com.ansh.atlaspractice.settings.TimeMode timeMode = com.ansh.atlaspractice.settings.TimeMode.SERVER;
     private com.ansh.atlaspractice.settings.ChatMode chatMode = com.ansh.atlaspractice.settings.ChatMode.ALL;
     private boolean autoGg = false;
     private boolean autoRequeue = false;
-    private String lastQueuedKitId = null; // Transient/Database, used for auto-requeue
-    // Direct performance tracking state
+    private String lastQueuedKitId = null;
     private ProfileState state;
 
-    // Concurrent map tracking runtime player cooldown states safely
     private final Map<ProfileCooldown.CooldownType, ProfileCooldown> activeCooldowns;
     private final CosmeticPlayerData cosmetics = new CosmeticPlayerData();
-    // In-memory quick lookup cache for ALL stats per Kit ID (populated asynchronously from MySQL)
     private final Map<String, KitStats> kitStats = new ConcurrentHashMap<>();
     private final Map<String, org.bukkit.inventory.ItemStack[]> customLayouts = new java.util.concurrent.ConcurrentHashMap<>();
     private final Map<String, org.bukkit.inventory.ItemStack[]> customArmor = new java.util.concurrent.ConcurrentHashMap<>();
 
-    // Lifecycle reference fields - linking relationships to separate systems dynamically
     private UUID activePartyId;
     private UUID activeMatchId;
     private final Map<String, Integer> selectedLayouts;
@@ -198,10 +194,15 @@ public final class Profile {
         this.activeCooldowns.clear();
         this.state = ProfileState.LOBBY;
     }
-    // =====================
-// Player Settings
-// =====================
-
+    public com.ansh.atlaspractice.settings.MapSelectionPreference getMapSelectionPreference() {
+        return mapSelectionPreference;
+    }
+    public void setMapSelectionPreference(
+            com.ansh.atlaspractice.settings.MapSelectionPreference mapSelectionPreference) {
+        this.mapSelectionPreference = mapSelectionPreference == null
+                        ? com.ansh.atlaspractice.settings.MapSelectionPreference.NONE
+                        : mapSelectionPreference;
+    }
     public boolean isScoreboardEnabled() {
         return scoreboardEnabled;
     }

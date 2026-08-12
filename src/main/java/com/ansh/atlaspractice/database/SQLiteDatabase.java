@@ -78,52 +78,114 @@ public final class SQLiteDatabase implements DatabaseService {
                 updateStatement.executeUpdate();
             }
 
-            // READ STRUCTURAL DATA FIELDS
             try (PreparedStatement fetchGlobalStatement =
                          connection.prepareStatement(
-                                 "SELECT kills, deaths, wins, allow_duels, allow_party_invites, scoreboard_visible, scoreboard_enabled, time_mode, chat_mode, auto_gg, auto_requeue, cosmetic_kill_effect, cosmetic_victory_effect, cosmetic_projectile_trail, cosmetic_walking_trail, cosmetic_aura, cosmetic_chat_color, cosmetic_kill_message, experience, level, coins, owned_cosmetics, last_daily_login FROM atlas_profiles WHERE uuid = ?;")) {
+                                 "SELECT kills, deaths, wins, allow_duels, allow_party_invites, " +
+                                         "scoreboard_visible, scoreboard_enabled, time_mode, chat_mode, " +
+                                         "auto_gg, auto_requeue, map_selection_preference, " +
+                                         "cosmetic_kill_effect, cosmetic_victory_effect, " +
+                                         "cosmetic_projectile_trail, cosmetic_walking_trail, " +
+                                         "cosmetic_aura, cosmetic_chat_color, cosmetic_kill_message, " +
+                                         "experience, level, coins, owned_cosmetics, last_daily_login " +
+                                         "FROM atlas_profiles WHERE uuid = ?;")) {
+
                 fetchGlobalStatement.setString(1, stringUuid);
+
                 try (ResultSet rs = fetchGlobalStatement.executeQuery()) {
                     if (rs.next()) {
+
                         profile.setKills(rs.getInt("kills"));
                         profile.setDeaths(rs.getInt("deaths"));
                         profile.setWins(rs.getInt("wins"));
+
                         profile.setAllowDuels(
-                                rs.getInt("allow_duels") == 1);
+                                rs.getInt("allow_duels") == 1
+                        );
+
                         profile.setAllowPartyInvites(
-                                rs.getInt("allow_party_invites") == 1);
+                                rs.getInt("allow_party_invites") == 1
+                        );
+
                         profile.setScoreboardVisible(
-                                rs.getInt("scoreboard_visible") == 1);
+                                rs.getInt("scoreboard_visible") == 1
+                        );
+
                         profile.setScoreboardEnabled(
-                                rs.getInt("scoreboard_enabled") == 1);
+                                rs.getInt("scoreboard_enabled") == 1
+                        );
 
                         String timeMode = rs.getString("time_mode");
                         if (timeMode != null) {
-                            profile.setTimeMode(com.ansh.atlaspractice.settings.TimeMode.valueOf(timeMode));
+                            try {
+                                profile.setTimeMode(
+                                        com.ansh.atlaspractice.settings.TimeMode.valueOf(timeMode)
+                                );
+                            } catch (IllegalArgumentException ignored) {}
                         }
 
                         String chatMode = rs.getString("chat_mode");
                         if (chatMode != null) {
-                            profile.setChatMode(com.ansh.atlaspractice.settings.ChatMode.valueOf(chatMode));
+                            try {
+                                profile.setChatMode(
+                                        com.ansh.atlaspractice.settings.ChatMode.valueOf(chatMode)
+                                );
+                            } catch (IllegalArgumentException ignored) {}
                         }
 
                         profile.setAutoGg(
-                                rs.getInt("auto_gg") == 1);
+                                rs.getInt("auto_gg") == 1
+                        );
 
                         profile.setAutoRequeue(
-                                rs.getInt("auto_requeue") == 1);
-                        profile.getCosmetics().setKillEffect(rs.getString("cosmetic_kill_effect"));
-                        profile.getCosmetics().setVictoryEffect(rs.getString("cosmetic_victory_effect"));
-                        profile.getCosmetics().setProjectileTrail(rs.getString("cosmetic_projectile_trail"));
-                        profile.getCosmetics().setWalkingTrail(rs.getString("cosmetic_walking_trail"));
-                        profile.getCosmetics().setAura(rs.getString("cosmetic_aura"));
-                        profile.getCosmetics().setChatColor(rs.getString("cosmetic_chat_color"));
-                        profile.getCosmetics().setKillMessage(rs.getString("cosmetic_kill_message"));
+                                rs.getInt("auto_requeue") == 1
+                        );
+
+                        String mapSelection = rs.getString("map_selection_preference");
+                        if (mapSelection != null) {
+                            try {
+                                profile.setMapSelectionPreference(
+                                        com.ansh.atlaspractice.settings.MapSelectionPreference.valueOf(
+                                                mapSelection.toUpperCase()
+                                        )
+                                );
+                            } catch (IllegalArgumentException ignored) {
+                                profile.setMapSelectionPreference(
+                                        com.ansh.atlaspractice.settings.MapSelectionPreference.NONE
+                                );
+                            }
+                        }
+
+                        profile.getCosmetics().setKillEffect(
+                                rs.getString("cosmetic_kill_effect")
+                        );
+                        profile.getCosmetics().setVictoryEffect(
+                                rs.getString("cosmetic_victory_effect")
+                        );
+                        profile.getCosmetics().setProjectileTrail(
+                                rs.getString("cosmetic_projectile_trail")
+                        );
+                        profile.getCosmetics().setWalkingTrail(
+                                rs.getString("cosmetic_walking_trail")
+                        );
+                        profile.getCosmetics().setAura(
+                                rs.getString("cosmetic_aura")
+                        );
+                        profile.getCosmetics().setChatColor(
+                                rs.getString("cosmetic_chat_color")
+                        );
+                        profile.getCosmetics().setKillMessage(
+                                rs.getString("cosmetic_kill_message")
+                        );
+
                         profile.setExperienceRaw(rs.getLong("experience"));
                         profile.setLevel(rs.getInt("level"));
                         profile.setCoinsRaw(rs.getLong("coins"));
-                        profile.getCosmetics().loadOwnedCosmetics(rs.getString("owned_cosmetics"));
-                        profile.setLastDailyLogin(rs.getString("last_daily_login"));
+                        profile.getCosmetics().loadOwnedCosmetics(
+                                rs.getString("owned_cosmetics")
+                        );
+                        profile.setLastDailyLogin(
+                                rs.getString("last_daily_login")
+                        );
                     }
                 }
             }
@@ -176,10 +238,21 @@ public final class SQLiteDatabase implements DatabaseService {
             connection.setAutoCommit(false);
 
             try {
-                // SAVE global metrics: Write core profile variables back to main table layout
                 try (PreparedStatement saveGlobalStatement =
                              connection.prepareStatement(
-                                     "UPDATE atlas_profiles SET kills = ?, deaths = ?, wins = ?, allow_duels = ?, allow_party_invites = ?, scoreboard_visible = ?, scoreboard_enabled = ?, time_mode = ?, chat_mode = ?, auto_gg = ?, auto_requeue = ?, cosmetic_kill_effect = ?, cosmetic_victory_effect = ?, cosmetic_projectile_trail = ?, cosmetic_walking_trail = ?, cosmetic_aura = ?, cosmetic_chat_color = ?, cosmetic_kill_message = ?, experience = ?, level = ?, coins = ?, owned_cosmetics = ?, last_daily_login = ? WHERE uuid = ?;")) {
+                                     "UPDATE atlas_profiles SET " +
+                                             "kills = ?, deaths = ?, wins = ?, " +
+                                             "allow_duels = ?, allow_party_invites = ?, " +
+                                             "scoreboard_visible = ?, scoreboard_enabled = ?, " +
+                                             "time_mode = ?, chat_mode = ?, auto_gg = ?, " +
+                                             "auto_requeue = ?, map_selection_preference = ?, " +
+                                             "cosmetic_kill_effect = ?, cosmetic_victory_effect = ?, " +
+                                             "cosmetic_projectile_trail = ?, cosmetic_walking_trail = ?, " +
+                                             "cosmetic_aura = ?, cosmetic_chat_color = ?, " +
+                                             "cosmetic_kill_message = ?, experience = ?, level = ?, " +
+                                             "coins = ?, owned_cosmetics = ?, last_daily_login = ? " +
+                                             "WHERE uuid = ?;")) {
+
                     saveGlobalStatement.setInt(1, profile.getKills());
                     saveGlobalStatement.setInt(2, profile.getDeaths());
                     saveGlobalStatement.setInt(3, profile.getWins());
@@ -191,22 +264,29 @@ public final class SQLiteDatabase implements DatabaseService {
                     saveGlobalStatement.setString(9, profile.getChatMode().name());
                     saveGlobalStatement.setInt(10, profile.isAutoGg() ? 1 : 0);
                     saveGlobalStatement.setInt(11, profile.isAutoRequeue() ? 1 : 0);
-                    saveGlobalStatement.setString(12, profile.getCosmetics().getKillEffect());
-                    saveGlobalStatement.setString(13, profile.getCosmetics().getVictoryEffect());
-                    saveGlobalStatement.setString(14, profile.getCosmetics().getProjectileTrail());
-                    saveGlobalStatement.setString(15, profile.getCosmetics().getWalkingTrail());
-                    saveGlobalStatement.setString(16, profile.getCosmetics().getAura());
-                    saveGlobalStatement.setString(17, profile.getCosmetics().getChatColor());
-                    saveGlobalStatement.setString(18, profile.getCosmetics().getKillMessage());
-                    saveGlobalStatement.setLong(19, profile.getExperience());
-                    saveGlobalStatement.setInt(20, profile.getLevel());
-                    saveGlobalStatement.setLong(21, profile.getCoins());
-                    saveGlobalStatement.setString(22, profile.getCosmetics().serializeOwnedCosmetics());
-                    saveGlobalStatement.setString(23, profile.getLastDailyLogin());
-                    saveGlobalStatement.setString(24, stringUuid);
+
+                    saveGlobalStatement.setString(
+                            12,
+                            profile.getMapSelectionPreference().name()
+                    );
+
+                    saveGlobalStatement.setString(13, profile.getCosmetics().getKillEffect());
+                    saveGlobalStatement.setString(14, profile.getCosmetics().getVictoryEffect());
+                    saveGlobalStatement.setString(15, profile.getCosmetics().getProjectileTrail());
+                    saveGlobalStatement.setString(16, profile.getCosmetics().getWalkingTrail());
+                    saveGlobalStatement.setString(17, profile.getCosmetics().getAura());
+                    saveGlobalStatement.setString(18, profile.getCosmetics().getChatColor());
+                    saveGlobalStatement.setString(19, profile.getCosmetics().getKillMessage());
+                    saveGlobalStatement.setLong(20, profile.getExperience());
+                    saveGlobalStatement.setInt(21, profile.getLevel());
+                    saveGlobalStatement.setLong(22, profile.getCoins());
+                    saveGlobalStatement.setString(23, profile.getCosmetics().serializeOwnedCosmetics());
+                    saveGlobalStatement.setString(24, profile.getLastDailyLogin());
+                    saveGlobalStatement.setString(25, stringUuid);
+
                     saveGlobalStatement.executeUpdate();
                 }
-// save perkit stats
+// save permit stats
                 try (PreparedStatement saveStatsStatement = connection.prepareStatement(upsertQuery)) {
                     for (com.ansh.atlaspractice.profile.KitStats stats : profile.getAllKitStats().values()) {
                         saveStatsStatement.setString(1, stringUuid);

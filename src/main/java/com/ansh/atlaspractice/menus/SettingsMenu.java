@@ -26,6 +26,7 @@ package com.ansh.atlaspractice.menus;
 import com.ansh.atlaspractice.AtlasPracticePlugin;
 import com.ansh.atlaspractice.profile.Profile;
 import com.ansh.atlaspractice.settings.ChatMode;
+import com.ansh.atlaspractice.settings.MapSelectionPreference;
 import com.ansh.atlaspractice.settings.TimeMode;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -59,9 +60,8 @@ public final class SettingsMenu implements Listener {
 
         Inventory inv = Bukkit.createInventory(null, 54, MENU_TITLE);
 
-        // Frame and Background fill
-        ItemStack borderGlass = createGuiItem(Material.STAINED_GLASS_PANE, (short) 15, " ", null); // Dark Gray
-        ItemStack fillerGlass = createGuiItem(Material.STAINED_GLASS_PANE, (short) 7, " ", null);  // Light Gray
+        ItemStack borderGlass = createGuiItem(Material.STAINED_GLASS_PANE, (short) 15, " ", null);
+        ItemStack fillerGlass = createGuiItem(Material.STAINED_GLASS_PANE, (short) 7, " ", null);
 
         for (int i = 0; i < 54; i++) {
             if (i < 9 || i > 44 || i % 9 == 0 || i % 9 == 8) {
@@ -71,19 +71,19 @@ public final class SettingsMenu implements Listener {
             }
         }
 
-        // Row 2: Interaction Settings
         inv.setItem(20, buildSettingItem("Duel Requests", Material.DIAMOND_SWORD, profile.isAllowDuels()));
         inv.setItem(22, buildSettingItem("Party Invites", Material.NAME_TAG, profile.isAllowPartyInvites()));
         inv.setItem(24, buildSettingItem("Scoreboard Visibility", Material.SIGN, profile.isScoreboardEnabled()));
 
-        // Row 3: Environment Settings
+
         boolean timeActive = profile.getTimeMode() != TimeMode.SERVER;
         inv.setItem(29, buildCycleItem("Time Changer", Material.WATCH, profile.getTimeMode().getName(), timeActive));
+
+        inv.setItem(31, buildMapSelectionItem(profile));
 
         boolean chatActive = profile.getChatMode() != ChatMode.NONE;
         inv.setItem(33, buildCycleItem("Chat Visibility", Material.PAPER, profile.getChatMode().getName(), chatActive));
 
-        // Row 4: Quality of Life Settings
         inv.setItem(38, buildSettingItem("Auto GG", Material.GOLD_INGOT, profile.isAutoGg()));
         inv.setItem(42, buildSettingItem("Auto Requeue", Material.EYE_OF_ENDER, profile.isAutoRequeue()));
 
@@ -130,6 +130,35 @@ public final class SettingsMenu implements Listener {
         return item;
     }
 
+    private ItemStack buildMapSelectionItem(Profile profile) {
+        ItemStack item = new ItemStack(Material.PAPER);
+        ItemMeta meta = item.getItemMeta();
+
+        if (meta != null) {
+            String current = profile.getMapSelectionPreference().getDisplayName();
+
+            meta.setDisplayName(ChatColor.GOLD + "Map Selection");
+
+            List<String> lore = new ArrayList<>();
+            lore.add(ChatColor.GRAY + "Choose when you want to");
+            lore.add(ChatColor.GRAY + "select Map.");
+            lore.add("");
+            lore.add(ChatColor.GRAY + "Current: " + ChatColor.AQUA + current);
+            lore.add("");
+            lore.add(ChatColor.YELLOW + "Click to change options.");
+            meta.setLore(lore);
+
+            if (profile.getMapSelectionPreference() != MapSelectionPreference.NONE) {
+                meta.addEnchant(Enchantment.DURABILITY, 1, true);
+                meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            }
+
+            item.setItemMeta(meta);
+        }
+
+        return item;
+    }
+
     private ItemStack createGuiItem(Material material, short data, String name, List<String> lore) {
         ItemStack item = new ItemStack(material, 1, data);
         ItemMeta meta = item.getItemMeta();
@@ -166,11 +195,10 @@ public final class SettingsMenu implements Listener {
                 break;
             case 24:
                 profile.setScoreboardEnabled(!profile.isScoreboardEnabled());
-                if (!profile.isScoreboardEnabled()) {
+                if (profile.isScoreboardEnabled()) {
+                    plugin.getScoreboardUpdateTask().registerPlayer(player);
+                } else {
                     plugin.getScoreboardUpdateTask().unregisterPlayer(player);
-                } else {if (plugin.getScoreboardUpdateTask() != null) {
-                        plugin.getScoreboardUpdateTask().registerPlayer(player);
-                    }
                 }
                 updated = true;
                 break;
@@ -181,6 +209,10 @@ public final class SettingsMenu implements Listener {
                 } else {
                     player.setPlayerTime(profile.getTimeMode().getTime(), false);
                 }
+                updated = true;
+                break;
+            case 31:
+                profile.setMapSelectionPreference(profile.getMapSelectionPreference().next());
                 updated = true;
                 break;
             case 33:

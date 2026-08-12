@@ -22,7 +22,6 @@
  */
 
 package com.ansh.atlaspractice.duel;
-
 import com.ansh.atlaspractice.AtlasPracticePlugin;
 import com.ansh.atlaspractice.arena.Arena;
 import com.ansh.atlaspractice.kit.Kit;
@@ -33,9 +32,16 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-
-import java.util.*;
+import org.bukkit.Bukkit;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
 
 public final class DuelManager {
 
@@ -46,19 +52,83 @@ public final class DuelManager {
         this.plugin = plugin;
     }
 
-    public void registerChallenge(Player challenger, Player target, Kit kit, int rounds) {
-        DuelChallenge challenge = new DuelChallenge(challenger.getUniqueId(), target.getUniqueId(), kit, rounds);
-        this.incomingChallenges.computeIfAbsent(target.getUniqueId(), k -> new ArrayList<>()).add(challenge);
+    public void registerChallenge(
+            Player challenger,
+            Player target,
+            Kit kit,
+            int rounds
+    ) {
+        registerChallenge(
+                challenger,
+                target,
+                kit,
+                rounds,
+                null
+        );
+    }
 
-        String roundFormat = (rounds == 1) ? "Best of 1" : "Best of " + rounds;
+    public void registerChallenge(
+            Player challenger,
+            Player target,
+            Kit kit,
+            int rounds,
+            String selectedArenaId
+    ) {
+        DuelChallenge challenge =
+                new DuelChallenge(
+                        challenger.getUniqueId(),
+                        target.getUniqueId(),
+                        kit,
+                        rounds,
+                        selectedArenaId
+                );
 
-        challenger.sendMessage("§3Duel §8Â» §fSent a §b" + kit.getDisplayName() + " §7(" + roundFormat + ") §fduel request to §b" + target.getName() + "§f.");
+        this.incomingChallenges
+                .computeIfAbsent(
+                        target.getUniqueId(),
+                        k -> new ArrayList<>()
+                )
+                .add(challenge);
 
-        target.sendMessage("§7§mâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€");
+        String roundFormat =
+                rounds == 1
+                        ? "Best of 1"
+                        : "Best of " + rounds;
+
+        challenger.sendMessage(
+                "§3Duel §8» §fSent a §b" +
+                        kit.getDisplayName() +
+                        " §7(" + roundFormat + ") §fduel request to §b" +
+                        target.getName() + "§f."
+        );
+
+        target.sendMessage(
+                "§7§m─────────────────────────────────"
+        );
         target.sendMessage("§b§lDuel Challenge Received");
-        target.sendMessage("§b" + challenger.getName() + " §fhas challenged you to a §b" + kit.getDisplayName() + " §fduel!");
-        target.sendMessage("§7Format: §b" + roundFormat);
-        TextComponent accept = new TextComponent("§a§l[ACCEPT DUEL]");
+        target.sendMessage(
+                "§b" + challenger.getName() +
+                        " §fhas challenged you to a §b" +
+                        kit.getDisplayName() +
+                        " §fduel!"
+        );
+        target.sendMessage(
+                "§7Format: §b" + roundFormat
+        );
+
+        if (selectedArenaId != null) {
+            plugin.getArenaManager()
+                    .getArena(selectedArenaId)
+                    .ifPresent(arena ->
+                            target.sendMessage(
+                                    "§7Map: §b" +
+                                            arena.getDisplayName()
+                            )
+                    );
+        }
+
+        TextComponent accept =
+                new TextComponent("§a§l[ACCEPT DUEL]");
 
         accept.setClickEvent(
                 new ClickEvent(
@@ -66,52 +136,173 @@ public final class DuelManager {
                         "/accept " + challenger.getName()
                 )
         );
-        TextComponent deny = new TextComponent(" §c§l[DENY]");
-        deny.setClickEvent(new ClickEvent(
-                ClickEvent.Action.RUN_COMMAND,
-                "/deny " + challenger.getName()
-        ));
 
-        target.spigot().sendMessage(accept, new TextComponent(" "), deny);
-        target.sendMessage("§7§mâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€");
-        target.playSound(target.getLocation(), Sound.CLICK, 1.0F, 1.2F);
+        TextComponent deny =
+                new TextComponent(" §c§l[DENY]");
+
+        deny.setClickEvent(
+                new ClickEvent(
+                        ClickEvent.Action.RUN_COMMAND,
+                        "/deny " + challenger.getName()
+                )
+        );
+
+        target.spigot().sendMessage(
+                accept,
+                new TextComponent(" "),
+                deny
+        );
+
+        target.sendMessage(
+                "§7§m─────────────────────────────────"
+        );
+
+        target.playSound(
+                target.getLocation(),
+                Sound.CLICK,
+                1.0F,
+                1.2F
+        );
     }
 
     public void acceptChallenge(Player receiver, Player challenger) {
-        List<DuelChallenge> challenges = this.incomingChallenges.get(receiver.getUniqueId());
-        if (challenges == null || challenges.isEmpty()) {
-            receiver.sendMessage("§cYou do not have any pending duel challenges.");
+        List<DuelChallenge> challenges =
+                this.incomingChallenges.get(
+                        receiver.getUniqueId()
+                );
+
+        if (challenges == null ||
+                challenges.isEmpty()) {
+
+            receiver.sendMessage(
+                    "§cYou do not have any pending duel challenges."
+            );
             return;
         }
 
-        challenges.removeIf(DuelChallenge::isExpired);
-        Optional<DuelChallenge> matchChallenge = challenges.stream()
-                .filter(c -> c.getChallengerUuid().equals(challenger.getUniqueId()))
-                .findFirst();
+        challenges.removeIf(
+                DuelChallenge::isExpired
+        );
+
+        Optional<DuelChallenge> matchChallenge =
+                challenges.stream()
+                        .filter(c ->
+                                c.getChallengerUuid()
+                                        .equals(
+                                                challenger.getUniqueId()
+                                        )
+                        )
+                        .findFirst();
 
         if (matchChallenge.isEmpty()) {
-            receiver.sendMessage("§cThat specific duel challenge has expired or does not exist.");
+
+            receiver.sendMessage(
+                    "§cThat specific duel challenge has expired or does not exist."
+            );
             return;
         }
 
-        DuelChallenge activeChallenge = matchChallenge.get();
+        DuelChallenge activeChallenge =
+                matchChallenge.get();
+
         challenges.remove(activeChallenge);
 
-        Kit kit = activeChallenge.getKit();
+        Kit kit =
+                activeChallenge.getKit();
 
-        boolean hasArena = plugin.getSharedArenaService().getAvailableArenaPool(kit).stream()
-                .anyMatch(arena -> arena != null && arena.isAvailable());
+        String selectedArenaId =
+                activeChallenge.getSelectedArenaId();
 
-        if (!hasArena) {
-            receiver.sendMessage("§cArena not set for §e" + kit.getDisplayName() + "§c.");
-            challenger.sendMessage("§cArena not set for §e" + kit.getDisplayName() + "§c.");
+        if (selectedArenaId != null) {
+
+            Arena selectedArena =
+                    plugin.getArenaManager()
+                            .getArena(selectedArenaId)
+                            .orElse(null);
+
+            if (selectedArena == null ||
+                    !plugin.getSharedArenaService()
+                            .isAssigned(
+                                    kit,
+                                    selectedArenaId
+                            )) {
+
+                receiver.sendMessage(
+                        "§cThe selected map is no longer assigned to this kit."
+                );
+
+                challenger.sendMessage(
+                        "§cThe selected map is no longer assigned to this kit."
+                );
+                return;
+            }
+
+            if (selectedArena.getSpawnRed() == null ||
+                    selectedArena.getSpawnBlue() == null ||
+                    selectedArena.getTemplateWorld() == null ||
+                    selectedArena.getTemplateWorld().isBlank() ||
+                    selectedArena.isDisabled()) {
+
+                receiver.sendMessage(
+                        "§cThe selected map is currently unavailable."
+                );
+
+                challenger.sendMessage(
+                        "§cThe selected map is currently unavailable."
+                );
+                return;
+            }
+
+            if (selectedArena.isAvailable()) {
+
+                startDuel(
+                        challenger,
+                        receiver,
+                        activeChallenge,
+                        selectedArena
+                );
+
+                return;
+            }
+
+            if (plugin.getConfig().getBoolean(
+                    "runtime-overflow.enabled",
+                    false
+            )) {
+
+                createRuntimeDuel(
+                        challenger,
+                        receiver,
+                        activeChallenge,
+                        selectedArena
+                );
+
+                return;
+            }
+
+            receiver.sendMessage(
+                    "§cThe selected map is currently occupied."
+            );
+
+            challenger.sendMessage(
+                    "§cThe selected map is currently occupied."
+            );
+
             return;
         }
 
-        Arena arena = plugin.getSharedArenaService().getAvailableArenaPool(kit).stream()
-                .filter(a -> a != null && a.isAvailable())
-                .findAny()
-                .orElse(null);
+        Arena arena =
+                plugin.getSharedArenaService()
+                        .getAvailableArenaPool(kit)
+                        .stream()
+                        .filter(a ->
+                                a != null &&
+                                        a.isAvailable() &&
+                                        a.getSpawnRed() != null &&
+                                        a.getSpawnBlue() != null
+                        )
+                        .findAny()
+                        .orElse(null);
 
         if (arena == null) {
 
@@ -126,43 +317,170 @@ public final class DuelManager {
             return;
         }
 
-        if (!arena.isAvailable()
-                || arena.getSpawnRed() == null
-                || arena.getSpawnBlue() == null) {
+        startDuel(
+                challenger,
+                receiver,
+                activeChallenge,
+                arena
+        );
+    }
+    private static final java.util.concurrent.atomic.AtomicLong
+            RUNTIME_COUNTER =
+            new java.util.concurrent.atomic.AtomicLong();
 
-            receiver.sendMessage(
-                    "§cThe assigned arena is currently unavailable."
-            );
-
+    private void startDuel(
+            Player challenger,
+            Player receiver,
+            DuelChallenge challenge,
+            Arena arena
+    ) {
+        if (!arena.isAvailable()) {
             challenger.sendMessage(
-                    "§cThe assigned arena is currently unavailable."
+                    "§cThe selected arena is no longer available."
             );
-
+            receiver.sendMessage(
+                    "§cThe selected arena is no longer available."
+            );
             return;
         }
 
-        List<MatchTeam.MatchPlayer> p1List = new ArrayList<>();
-        p1List.add(new MatchTeam.MatchPlayer(challenger.getUniqueId(), challenger.getName()));
-        MatchTeam team1 = new MatchTeam(
-                p1List,
-                TeamColor.RED
+        arena.setState(
+                com.ansh.atlaspractice.arena.ArenaState.ALLOCATED
         );
 
-        List<MatchTeam.MatchPlayer> p2List = new ArrayList<>();
-        p2List.add(new MatchTeam.MatchPlayer(receiver.getUniqueId(), receiver.getName()));
-        MatchTeam team2 = new MatchTeam(
-                p2List,
-                TeamColor.BLUE
+        MatchTeam team1 =
+                new MatchTeam(
+                        Collections.singletonList(
+                                new MatchTeam.MatchPlayer(
+                                        challenger.getUniqueId(),
+                                        challenger.getName()
+                                )
+                        ),
+                        TeamColor.RED
+                );
+
+        MatchTeam team2 =
+                new MatchTeam(
+                        Collections.singletonList(
+                                new MatchTeam.MatchPlayer(
+                                        receiver.getUniqueId(),
+                                        receiver.getName()
+                                )
+                        ),
+                        TeamColor.BLUE
+                );
+
+        DuelMatch match =
+                new DuelMatch(
+                        challenge.getKit(),
+                        arena,
+                        Arrays.asList(team1, team2),
+                        challenge.getTotalRounds()
+                );
+
+        try {
+            plugin.getMatchManager()
+                    .hostMatch(match);
+
+        } catch (Exception exception) {
+
+            if (arena instanceof com.ansh.atlaspractice.arena.RuntimeArena) {
+                arena.cleanAndResetWorld();
+            } else {
+                arena.setState(
+                        com.ansh.atlaspractice.arena.ArenaState.FREE
+                );
+            }
+
+            throw exception;
+        }
+    }
+
+    private void createRuntimeDuel(
+            Player challenger,
+            Player receiver,
+            DuelChallenge challenge,
+            Arena sourceArena
+    ) {
+        long runtimeNumber =
+                RUNTIME_COUNTER.incrementAndGet();
+
+        String runtimeWorldName =
+                sourceArena.getWorldName() +
+                        "_temp_duel_" +
+                        runtimeNumber;
+
+        String runtimeId =
+                sourceArena.getId() +
+                        "#duel-runtime#" +
+                        runtimeNumber;
+
+        com.ansh.atlaspractice.arena.RuntimeArena runtimeArena =
+                new com.ansh.atlaspractice.arena.RuntimeArena(
+                        runtimeId,
+                        sourceArena,
+                        runtimeWorldName
+                );
+
+        plugin.getArenaManager()
+                .registerArena(runtimeArena);
+
+        plugin.getLogger().info(
+                "[AtlasPractice] Creating duel overflow runtime for " +
+                        sourceArena.getId()
         );
 
-        DuelMatch premiumMatch = new DuelMatch(
-                activeChallenge.getKit(),
-                arena,
-                Arrays.asList(team1, team2),
-                activeChallenge.getTotalRounds()
-        );
+        plugin.getWorldService()
+                .loadArenaWorld(runtimeArena)
+                .whenComplete((world, throwable) -> {
 
-        plugin.getMatchManager().hostMatch(premiumMatch);
+                    if (throwable != null) {
+
+                        plugin.getArenaManager()
+                                .unregisterArena(runtimeArena);
+
+                        plugin.getLogger().warning(
+                                "[AtlasPractice] Failed to create duel runtime " +
+                                        runtimeWorldName +
+                                        ": " +
+                                        throwable.getMessage()
+                        );
+
+                        Bukkit.getScheduler()
+                                .runTask(
+                                        plugin,
+                                        () -> {
+                                            challenger.sendMessage(
+                                                    "§cNo arena is available right now. Please try again."
+                                            );
+
+                                            receiver.sendMessage(
+                                                    "§cNo arena is available right now. Please try again."
+                                            );
+                                        }
+                                );
+
+                        return;
+                    }
+
+                    runtimeArena.bindToWorld(world);
+
+                    plugin.getLogger().info(
+                            "[AtlasPractice] Duel runtime loaded: " +
+                                    runtimeWorldName
+                    );
+
+                    Bukkit.getScheduler()
+                            .runTask(
+                                    plugin,
+                                    () -> startDuel(
+                                            challenger,
+                                            receiver,
+                                            challenge,
+                                            runtimeArena
+                                    )
+                            );
+                });
     }
     public void denyChallenge(Player receiver, Player challenger) {
         List<DuelChallenge> challenges = incomingChallenges.get(receiver.getUniqueId());

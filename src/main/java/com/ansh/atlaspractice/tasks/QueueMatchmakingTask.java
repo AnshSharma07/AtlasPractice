@@ -68,9 +68,13 @@ public final class QueueMatchmakingTask extends BukkitRunnable {
             for (int j = i + 1; j < rankedCandidates.size(); j++) {
                 QueueEntry secondCandidate = rankedCandidates.get(j);
 
-                // Enforce mode uniformity matching filters
                 if (!firstCandidate.getKit().getId().equals(secondCandidate.getKit().getId())) continue;
+                if (!mapSelectionsCompatible(firstCandidate, secondCandidate)) {
+                    continue;
+                }
 
+                if (!canResolveArenaForQueue(firstCandidate, secondCandidate)) {
+                    continue;}
                 if (evaluateRatingThresholds(firstCandidate, secondCandidate)) {
                     this.plugin.getQueueManager().getRankedQueue().removeEntry(firstCandidate.getEntryId());
                     this.plugin.getQueueManager().getRankedQueue().removeEntry(secondCandidate.getEntryId());
@@ -89,6 +93,12 @@ public final class QueueMatchmakingTask extends BukkitRunnable {
             QueueEntry firstCandidate = unrankedCandidates.get(i);
             for (int j = i + 1; j < unrankedCandidates.size(); j++) {
                 QueueEntry secondCandidate = unrankedCandidates.get(j);
+                if (!mapSelectionsCompatible(firstCandidate, secondCandidate)) {
+                    continue;
+                }
+                if (!canResolveArenaForQueue(firstCandidate, secondCandidate)) {
+                    continue;
+                }
                 if (!firstCandidate.getKit().getId().equals(secondCandidate.getKit().getId())) continue;
 
                 this.plugin.getQueueManager().getUnrankedQueue().removeEntry(firstCandidate.getEntryId());
@@ -107,9 +117,15 @@ public final class QueueMatchmakingTask extends BukkitRunnable {
         return activeDelta <= rangeA || activeDelta <= rangeB;
     }
 
-    private void initializeMatchFromQueue(QueueEntry entryA, QueueEntry entryB) {
-        Player playerA = Bukkit.getPlayer(entryA.getEntryId());
-        Player playerB = Bukkit.getPlayer(entryB.getEntryId());
+    private void initializeMatchFromQueue(
+            QueueEntry entryA,
+            QueueEntry entryB
+    ) {
+        Player playerA =
+                Bukkit.getPlayer(entryA.getEntryId());
+
+        Player playerB =
+                Bukkit.getPlayer(entryB.getEntryId());
 
         if (playerA == null || playerB == null) {
             resetQueuedProfile(entryA);
@@ -119,50 +135,148 @@ public final class QueueMatchmakingTask extends BukkitRunnable {
 
         Kit kit = entryA.getKit();
 
-        if (plugin.getSharedArenaService().getArenaIds(kit).isEmpty()) {
+        if (plugin.getSharedArenaService()
+                .getArenaIds(kit)
+                .isEmpty()) {
 
-            playerA.sendMessage("§cThis kit has no arena assigned.");
-            playerB.sendMessage("§cThis kit has no arena assigned.");
+            playerA.sendMessage(
+                    "§cThis kit has no arena assigned."
+            );
+            playerB.sendMessage(
+                    "§cThis kit has no arena assigned."
+            );
 
+            resetQueuedProfile(entryA);
+            resetQueuedProfile(entryB);
             return;
         }
 
-        Arena arena = findAvailablePermanentArena(kit);
+        String selectedArenaId =
+                entryA.getSelectedArenaId() != null
+                        ? entryA.getSelectedArenaId()
+                        : entryB.getSelectedArenaId();
+
+        if (selectedArenaId != null) {
+
+            Arena selectedArena =
+                    plugin.getArenaManager()
+                            .getArena(selectedArenaId)
+                            .orElse(null);
+
+            if (!isUsableArena(selectedArena)) {
+
+                playerA.sendMessage(
+                        "§cYour selected map is no longer available."
+                );
+                playerB.sendMessage(
+                        "§cYour selected map is no longer available."
+                );
+
+                resetQueuedProfile(entryA);
+                resetQueuedProfile(entryB);
+                return;
+            }
+
+            if (selectedArena.isAvailable()) {
+
+                selectedArena.setState(
+                        ArenaState.ALLOCATED
+                );
+
+                startMatch(
+                        entryA,
+                        entryB,
+                        playerA,
+                        playerB,
+                        selectedArena
+                );
+
+                return;
+            }
+
+            if (!plugin.getConfig().getBoolean("runtime-overflow.enabled", false)) {
+                return;
+            }
+
+            createRuntimeAndStartMatch(selectedArena, entryA, entryB, playerA, playerB);
+            return;
+        }
+
+        Arena arena =
+                findAvailablePermanentArena(kit);
 
         if (arena == null) {
-            if (!plugin.getConfig().getBoolean("runtime-overflow.enabled", false)) {
-                playerA.sendMessage("§cAssigned arena could not be found.");
-                playerB.sendMessage("§cAssigned arena could not be found.");
+
+            if (!plugin.getConfig().getBoolean(
+                    "runtime-overflow.enabled",
+                    false
+            )) {
+
+                playerA.sendMessage(
+                        "§cAssigned arena could not be found."
+                );
+                playerB.sendMessage(
+                        "§cAssigned arena could not be found."
+                );
+
                 resetQueuedProfile(entryA);
                 resetQueuedProfile(entryB);
                 return;
             }
 
-            Arena sourceArena = findOverflowSourceArena(kit);
+            Arena sourceArena =
+                    findOverflowSourceArena(kit);
+
             if (sourceArena == null) {
-                playerA.sendMessage("§cAssigned arena could not be found.");
-                playerB.sendMessage("§cAssigned arena could not be found.");
+
+                playerA.sendMessage(
+                        "§cAssigned arena could not be found."
+                );
+                playerB.sendMessage(
+                        "§cAssigned arena could not be found."
+                );
+
                 resetQueuedProfile(entryA);
                 resetQueuedProfile(entryB);
                 return;
             }
 
-            createRuntimeAndStartMatch(sourceArena, entryA, entryB, playerA, playerB);
+            createRuntimeAndStartMatch(
+                    sourceArena,
+                    entryA,
+                    entryB,
+                    playerA,
+                    playerB
+            );
+
             return;
         }
 
         if (!isUsableArena(arena)) {
 
-            playerA.sendMessage("§cAssigned arena is unavailable.");
-            playerB.sendMessage("§cAssigned arena is unavailable.");
+            playerA.sendMessage(
+                    "§cAssigned arena is unavailable."
+            );
+            playerB.sendMessage(
+                    "§cAssigned arena is unavailable."
+            );
 
             resetQueuedProfile(entryA);
             resetQueuedProfile(entryB);
-
             return;
         }
-        arena.setState(ArenaState.ALLOCATED);
-        startMatch(entryA, entryB, playerA, playerB, arena);
+
+        arena.setState(
+                ArenaState.ALLOCATED
+        );
+
+        startMatch(
+                entryA,
+                entryB,
+                playerA,
+                playerB,
+                arena
+        );
     }
 
     private void startMatch(QueueEntry entryA, QueueEntry entryB, Player playerA, Player playerB, Arena arena) {
@@ -253,7 +367,61 @@ public final class QueueMatchmakingTask extends BukkitRunnable {
             Bukkit.getScheduler().runTask(plugin, () -> startMatch(entryA, entryB, playerA, playerB, runtimeArena));
         });
     }
+    private boolean mapSelectionsCompatible(QueueEntry first, QueueEntry second) {
+        String firstMap =
+                first.getSelectedArenaId();
 
+        String secondMap =
+                second.getSelectedArenaId();
+
+        if (firstMap == null || secondMap == null) {
+            return true;
+        }
+
+        return firstMap.equalsIgnoreCase(secondMap);
+    }
+
+    private boolean canResolveArenaForQueue(QueueEntry first, QueueEntry second) {
+        String selectedMap =
+                first.getSelectedArenaId() != null
+                        ? first.getSelectedArenaId()
+                        : second.getSelectedArenaId();
+
+        if (selectedMap == null) {
+
+            if (findAvailablePermanentArena(
+                    first.getKit()
+            ) != null) {
+                return true;
+            }
+
+            return plugin.getConfig().getBoolean(
+                    "runtime-overflow.enabled",
+                    false
+            ) &&
+                    findOverflowSourceArena(
+                            first.getKit()
+                    ) != null;
+        }
+
+        Arena selected =
+                plugin.getArenaManager()
+                        .getArena(selectedMap)
+                        .orElse(null);
+
+        if (!isUsableArena(selected)) {
+            return false;
+        }
+
+        if (selected.isAvailable()) {
+            return true;
+        }
+
+        return plugin.getConfig().getBoolean(
+                "runtime-overflow.enabled",
+                false
+        );
+    }
     private void resetQueuedProfile(QueueEntry entry) {
         Profile profile = this.plugin.getProfileManager().getProfile(entry.getEntryId());
         if (profile != null && profile.getState() == ProfileState.QUEUING) {

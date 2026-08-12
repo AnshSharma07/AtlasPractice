@@ -25,6 +25,7 @@ package com.ansh.atlaspractice.menus;
 
 import com.ansh.atlaspractice.AtlasPracticePlugin;
 import com.ansh.atlaspractice.kit.Kit;
+import com.ansh.atlaspractice.profile.Profile;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -57,7 +58,6 @@ public final class UnrankedMenu extends Menu {
 
         for (int i = 0; i < getSize(); i++) {
             buttons.put(i, new Button(filler, (p, click) -> {
-                // Decorative filler - does nothing
             }));
         }
 
@@ -101,23 +101,43 @@ public final class UnrankedMenu extends Menu {
                 icon.setItemMeta(meta);
             }
 
-            buttons.put(slots.get(index++), new Button(icon, (p, clickType) -> {
-                p.closeInventory();
+            buttons.put(
+                    slots.get(index++),
+                    new Button(
+                            icon,
+                            (p, clickType) -> {
+                                p.closeInventory();
+                                if (p.hasMetadata("party-split")) {
+                                    p.removeMetadata("party-split", plugin);
 
-                if (p.hasMetadata("party-split")) {
-                    p.removeMetadata("party-split", plugin);
-                    plugin.getPartyManager().executePartySplit(p, kit);
-                    return;
-                }
+                                    plugin.getPartyManager()
+                                            .executePartySplit(p, kit);
+                                    return;
+                                }
 
-                if (explicitDuelTarget == null) {
-                    plugin.getQueueManager().joinUnrankedQueue(p, kit);
-                } else {
-                    new DuelRoundSettingsMenu(plugin, explicitDuelTarget, kit).openMenu(p);
-                }
-            }));
+                                Profile profile =
+                                        plugin.getProfileManager().getProfile(p.getUniqueId());
+                                if (explicitDuelTarget == null) {
+
+                                    if (profile != null &&
+                                            profile.getMapSelectionPreference()
+                                                    .allowsQueue()) {
+
+                                        new MapSelectionMenu(plugin, kit, false, 1).openMenu(p);
+                                    } else {
+                                        plugin.getQueueManager().joinUnrankedQueue(p, kit);
+                                    }
+                                } else {
+                                    new DuelRoundSettingsMenu(
+                                            plugin,
+                                            explicitDuelTarget,
+                                            kit
+                                    ).openMenu(p);
+                                }
+                            }
+                    )
+            );
         }
-
         return buttons;
     }
 }

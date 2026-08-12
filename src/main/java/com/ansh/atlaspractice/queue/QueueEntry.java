@@ -20,45 +20,98 @@
  * Project: https://github.com/AnshSharma07/AtlasPractice
  * Documentation: https://modularboyansh.xyz/atlas_docs
  */
-
 package com.ansh.atlaspractice.queue;
 
 import com.ansh.atlaspractice.kit.Kit;
-import java.util.UUID;
 
+import java.util.UUID;
 
 public final class QueueEntry {
 
-    private final UUID entryId; // Maps back to Player UUID or Party UUID directly
+    private final UUID entryId;
     private final Kit kit;
     private final boolean party;
     private final boolean ranked;
     private final int baselineElo;
     private final long executionStartTimeMillis;
     private final int layoutIndex;
+    private final String selectedArenaId;
 
-    public QueueEntry(UUID entryId,
-                      Kit kit,
-                      boolean party,
-                      boolean ranked,
-                      int baselineElo,
-                      int layoutIndex) {
+    public QueueEntry(
+            UUID entryId,
+            Kit kit,
+            boolean party,
+            boolean ranked,
+            int baselineElo,
+            int layoutIndex
+    ) {
+        this(
+                entryId,
+                kit,
+                party,
+                ranked,
+                baselineElo,
+                layoutIndex,
+                null
+        );
+    }
+
+    public QueueEntry(
+            UUID entryId,
+            Kit kit,
+            boolean party,
+            boolean ranked,
+            int baselineElo,
+            int layoutIndex,
+            String selectedArenaId
+    ) {
         this.entryId = entryId;
         this.kit = kit;
         this.party = party;
         this.ranked = ranked;
-        this.layoutIndex = layoutIndex;
         this.baselineElo = baselineElo;
-        this.executionStartTimeMillis = System.currentTimeMillis();
+        this.layoutIndex = layoutIndex;
+        this.selectedArenaId = selectedArenaId;
+        this.executionStartTimeMillis =
+                System.currentTimeMillis();
     }
 
-    public UUID getEntryId(){return entryId;} public Kit getKit(){return kit;} public boolean isParty(){return party;} public boolean isRanked(){return ranked;} public int getBaselineElo(){return baselineElo;} public long getExecutionStartTimeMillis(){return executionStartTimeMillis;}
+    public UUID getEntryId() {
+        return entryId;
+    }
 
+    public Kit getKit() {
+        return kit;
+    }
+
+    public boolean isParty() {
+        return party;
+    }
+
+    public boolean isRanked() {
+        return ranked;
+    }
+
+    public int getBaselineElo() {
+        return baselineElo;
+    }
+
+    public long getExecutionStartTimeMillis() {
+        return executionStartTimeMillis;
+    }
 
     public int getSecondsInQueue() {
-        return (int) ((System.currentTimeMillis() - this.executionStartTimeMillis) / 1000L);
+        return (int) (
+                (System.currentTimeMillis()
+                        - executionStartTimeMillis) / 1000L
+        );
     }
+
     public int getLayoutIndex() {
         return layoutIndex;
+    }
+
+    public String getSelectedArenaId() {
+        return selectedArenaId;
     }
 }

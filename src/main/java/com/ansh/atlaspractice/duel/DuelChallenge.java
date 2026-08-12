@@ -35,19 +35,31 @@ public final class DuelChallenge {
     private final UUID challengerUuid;
     private final UUID targetUuid;
     private final Kit kit;
-    private final int totalRounds; // 1 = Bo1, 3 = Bo3, 5 = Bo5
+    private final int totalRounds;
+    private final String selectedArenaId;
     private final long expirationTimestamp;
 
     public DuelChallenge(UUID challengerUuid, UUID targetUuid, Kit kit, int totalRounds) {
+        this(challengerUuid, targetUuid, kit, totalRounds, null);
+    }
+
+    public DuelChallenge(
+            UUID challengerUuid,
+            UUID targetUuid,
+            Kit kit,
+            int totalRounds,
+            String selectedArenaId
+    ) {
         this.id = UUID.randomUUID();
         this.challengerUuid = challengerUuid;
         this.targetUuid = targetUuid;
         this.kit = kit;
         this.totalRounds = totalRounds;
-        this.expirationTimestamp = System.currentTimeMillis() + 60_000L; // 60-second
+        this.selectedArenaId = selectedArenaId;
+        this.expirationTimestamp = System.currentTimeMillis() + 60_000L;
     }
 
     public boolean isExpired() {
-        return System.currentTimeMillis() > this.expirationTimestamp;
+        return System.currentTimeMillis() > expirationTimestamp;
     }
 }

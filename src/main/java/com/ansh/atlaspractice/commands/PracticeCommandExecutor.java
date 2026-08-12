@@ -54,15 +54,16 @@ public final class PracticeCommandExecutor implements CommandExecutor {
                 return true;
             }
             player.teleport(player.getWorld().getSpawnLocation());
-            player.sendMessage("§aTeleported to the central lobby area.");
+            player.sendMessage("§aTeleported to the main lobby.");
             return true;
         }
 
         player.sendMessage("§7§m--------------------------------------------------");
-        player.sendMessage("§6§lAtlasPractice Platform v1.0.0");
-        player.sendMessage("§eType §6/duel <name> §eto challenge an active lobby participant.");
-        player.sendMessage("§eType §6/party §eto look up multi-client grouping systems.");
-        player.sendMessage("§eType §6/stats §eto view localized ranking calculations.");
+        player.sendMessage("§6§lAtlasPractice v1.0.2");
+        player.sendMessage("§eType §6/duel <name> §eto challenge an active lobby player.");
+        player.sendMessage("§eType §6/party §eto look up party systems.");
+        player.sendMessage("§eType §6/stats §eto view stats.");
+        player.sendMessage("§eType §6/Unranked or the Hotbar item to start the Game!");
         player.sendMessage("§7§m--------------------------------------------------");
         return true;
     }

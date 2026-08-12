@@ -32,7 +32,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
-
+import com.ansh.atlaspractice.profile.Profile;
 /**
  * Ranked queue kit selector.
  * Only shows kits that are enabled inside ranked.yml â€” not kits.yml.
@@ -53,8 +53,7 @@ public final class RankedMenu extends Menu {
         Profile profile = plugin.getProfileManager().getProfile(player.getUniqueId());
         if (profile == null) return buttons;
 
-        // Filler
-        ItemStack filler = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14); // red tint
+        ItemStack filler = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14);
         ItemMeta fillerMeta = filler.getItemMeta();
         if (fillerMeta != null) { fillerMeta.setDisplayName(" "); filler.setItemMeta(fillerMeta); }
         for (int i = 0; i < getSize(); i++) {
@@ -71,7 +70,6 @@ public final class RankedMenu extends Menu {
         int index = 0;
         for (Kit kit : plugin.getKitManager().getRegistry().getAllKits()) {
             if (index >= slots.size()) break;
-            // Only show kits enabled in ranked.yml
             if (!plugin.getRankedConfig().isKitEnabled(kit.getId())) continue;
 
             int currentElo = profile.getEloForKit(kit.getId());
@@ -89,10 +87,35 @@ public final class RankedMenu extends Menu {
                 icon.setItemMeta(meta);
             }
 
-            buttons.put(slots.get(index++), new Button(icon, (p, clickType) -> {
-                p.closeInventory();
-                plugin.getQueueManager().joinRankedQueue(p, kit);
-            }));
+            buttons.put(
+                    slots.get(index++),
+                    new Button(
+                            icon,
+                            (p, clickType) -> {
+
+                                p.closeInventory();
+
+                                Profile currentProfile =
+                                        plugin.getProfileManager()
+                                                .getProfile(
+                                                        p.getUniqueId()
+                                                );
+
+                                if (currentProfile != null &&
+                                        currentProfile
+                                                .getMapSelectionPreference()
+                                                .allowsQueue()) {
+
+                                    new MapSelectionMenu(plugin, kit, true, 1).openMenu(p);
+
+                                } else {
+
+                                    plugin.getQueueManager()
+                                            .joinRankedQueue(p, kit);
+                                }
+                            }
+                    )
+            );
         }
 
         return buttons;

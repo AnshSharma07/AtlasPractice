@@ -1,6 +1,6 @@
 name: AtlasPractice
 main: com.ansh.atlaspractice.AtlasPracticePlugin
-version: 1.0.1
+version: 1.0.2
 author: Ansh Sharma
 depend: [SlimeWorldManager]
 softdepend: [AdvancedReplay]
@@ -23,7 +23,7 @@ commands:
     description: Edit Kit as per your preference.
 
   resetlayout:
-    description: Resets a custom kit layout back to the administrative baseline template structure.
+    description: Resets a custom kit layout.
     usage: /resetlayout <kitName>
 
   cosmetics:
@@ -31,7 +31,7 @@ commands:
     usage: /cosmetics
 
   accept:
-    description: Accept an active pending direct duel challenge sequence.
+    description: Accept an active pending direct duel challenge.
     usage: /accept <player>
 
   deny:
@@ -66,7 +66,7 @@ commands:
 
   atlasleaderboard:
     aliases: [lb, leaderboards]
-    description: Manage packet holograms and leaderboards.
+    description: Manage holograms and leaderboards.
     permission: atlaspractice.admin
 
 # UNDER DEVELOPMENT BOT
@@ -76,7 +76,7 @@ commands:
     permission: atlaspractice.bot
 
   arenaautosetup:
-    description: Internal Atlas Practice auto setup hook
+    description: Internal Atlas Practice auto setup hook (use for bedfight only )
     permission: atlas.admin
 
   toolazytocreatekits:
@@ -84,7 +84,7 @@ commands:
     permission: atlas.admin
 
   presetkitcreate:
-    description: Internal hidden command to generate the targeted preset kit.
+    description: Internal hidden command to generate the targeted preset kit. (for toolazytocreatekits)
     permission: atlas.admin
 
   setlobbyspawn:
@@ -103,7 +103,7 @@ commands:
     permission: atlaspractice.admin.progression
 
   atlasreplayview:
-    description: Opens a saved AtlasPractice match replay.
+    description: Opens a saved AtlasPractice match replay. (will later be simplified and made easy to use for server moderation)
     usage: /atlasreplayview <replayId>
 
   allowedrankedkits:
