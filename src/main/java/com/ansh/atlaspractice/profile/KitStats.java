@@ -54,8 +54,15 @@ public class KitStats {
     
     public void addKill() { this.kills++; }
     public void addDeath() { this.deaths++; }
-    public void addWin() { this.wins++; }
-    public void addLoss() { this.losses++; }
+    public void addWin() {
+        this.wins++;
+        incWinstreak();
+    }
+
+    public void addLoss() {
+        this.losses++;
+        resetWinstreak();
+    }
     public void addMatch() { this.matches++; }
     
     public void incWinstreak() {

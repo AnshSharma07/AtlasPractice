@@ -34,7 +34,9 @@ public class LeaderboardKey {
 
     public LeaderboardKey(StatType statType, @Nullable String kitName) {
         this.statType = statType;
-        this.kitName = (kitName != null && kitName.equalsIgnoreCase("overall")) ? null : kitName;
+        this.kitName = (kitName == null || kitName.trim().isEmpty() || kitName.equalsIgnoreCase("overall") || kitName.equalsIgnoreCase("none"))
+                ? null
+                : kitName;
     }
     
     public boolean isOverall() {

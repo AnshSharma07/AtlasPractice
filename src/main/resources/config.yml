@@ -1,3 +1,21 @@
+leaderboards:
+  styles:
+    default:
+      max-entries: 10
+      title: "&b&lTop {stat}"
+      kit-line: "&7{kit}"
+      entry: "&e#{position} &f{player} &7- &b{value}"
+      empty: "&e#{position} &8N/A"
+      footer: ""
+
+    compact:
+      max-entries: 10
+      title: "&b&l{stat}"
+      kit-line: "&7{kit}"
+      entry: "&7{position}. &f{player} &b{value}"
+      empty: "&7{position}. &8-"
+      footer: ""
+
 hotbar:
   lobby:
     unranked:

@@ -44,8 +44,12 @@ public class LeaderboardCache {
     }
 
     public void startCachingTask() {
-        // Run completely asynchronously every 5 minutes (6000 ticks)
-        this.taskId = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, this::refreshCache, 20L, 60).getTaskId();
+        this.taskId = Bukkit.getScheduler().runTaskTimerAsynchronously(
+                plugin,
+                this::refreshCache,
+                20L,
+                6000L
+        ).getTaskId();
     }
 
     public void shutdown() {
@@ -54,33 +58,111 @@ public class LeaderboardCache {
         }
     }
 
+    public void refreshNow() {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, this::refreshCache);
+    }
+
     private void refreshCache() {
         List<Profile> allProfiles = new ArrayList<>(plugin.getProfileManager().getProfiles());
         List<Kit> allKits = new ArrayList<>(plugin.getKitManager().getAllKits());
 
         for (StatType type : StatType.values()) {
-            if (type == StatType.KIT_ELO) continue; // Deprecated in favor of generic per-kit types
+            if (type == StatType.KIT_ELO) {
+                for (Kit kit : allKits) {
+                    cacheKit(type, kit.getId(), allProfiles);
+                }
+                continue;
+            }
 
-            //  Calculate Global Rankings
             LeaderboardKey globalKey = new LeaderboardKey(type, null);
-            List<Profile> globalSorted = allProfiles.stream()
-                    .sorted(getGlobalComparator(type).reversed())
-                    .limit(10)
-                    .collect(Collectors.toList());
-            rankings.put(globalKey, globalSorted);
+            rankings.put(globalKey, buildGlobalRanking(type, allProfiles));
 
-            // 2. Calculate Per-Kit Rankings for every kit
             for (Kit kit : allKits) {
-                LeaderboardKey kitKey = new LeaderboardKey(type, kit.getId());
-                List<Profile> kitSorted = allProfiles.stream()
-                        .sorted(getKitComparator(type, kit.getId()).reversed())
-                        .limit(10)
-                        .collect(Collectors.toList());
-                rankings.put(kitKey, kitSorted);
+                cacheKit(type, kit.getId(), allProfiles);
             }
         }
 
         Bukkit.getScheduler().runTask(plugin, () -> plugin.getLeaderboardManager().updateAllHolograms());
+    }
+
+    private void cacheKit(StatType type, String kitId, List<Profile> profiles) {
+        LeaderboardKey key = new LeaderboardKey(type, kitId);
+        rankings.put(key, buildKitRanking(type, kitId, profiles));
+    }
+
+    private List<Profile> buildGlobalRanking(StatType type, List<Profile> profiles) {
+        return profiles.stream()
+                .filter(p -> hasGlobalValue(p, type))
+                .sorted(getGlobalComparator(type).reversed().thenComparing(Profile::getLastKnownName, String.CASE_INSENSITIVE_ORDER))
+                .limit(10)
+                .collect(Collectors.toList());
+    }
+
+    private List<Profile> buildKitRanking(StatType type, String kitId, List<Profile> profiles) {
+        return profiles.stream()
+                .filter(p -> hasKitValue(p, type, kitId))
+                .sorted(getKitComparator(type, kitId).reversed().thenComparing(Profile::getLastKnownName, String.CASE_INSENSITIVE_ORDER))
+                .limit(10)
+                .collect(Collectors.toList());
+    }
+
+    private boolean hasGlobalValue(Profile profile, StatType type) {
+        switch (type) {
+            case WINS:
+                return profile.getWins() > 0;
+            case LOSSES:
+                return profile.getLosses() > 0;
+            case KILLS:
+                return profile.getKills() > 0;
+            case DEATHS:
+                return profile.getDeaths() > 0;
+            case WINSTREAK:
+                return profile.getWinStreak() > 0;
+            case BEST_WINSTREAK:
+                return profile.getBestWinStreak() > 0;
+            case MATCHES:
+                return profile.getMatchesPlayed() > 0;
+            case LEVEL:
+                return profile.getLevel() > 1;
+            case EXPERIENCE:
+                return profile.getExperience() > 0;
+            case COINS:
+                return profile.getCoins() > 0;
+            case GLOBAL_ELO:
+                return profile.getAllKitStats().values().stream().anyMatch(stats -> stats.getMatches() > 0);
+            case KIT_ELO:
+            default:
+                return false;
+        }
+    }
+
+    private boolean hasKitValue(Profile profile, StatType type, String kitId) {
+        KitStats stats = profile.findKitStats(kitId);
+        if (stats == null) {
+            return false;
+        }
+
+        switch (type) {
+            case WINS:
+                return stats.getWins() > 0;
+            case LOSSES:
+                return stats.getLosses() > 0;
+            case KILLS:
+                return stats.getKills() > 0;
+            case DEATHS:
+                return stats.getDeaths() > 0;
+            case WINSTREAK:
+                return stats.getWinstreak() > 0;
+            case BEST_WINSTREAK:
+                return stats.getBestWinstreak() > 0;
+            case MATCHES:
+                return stats.getMatches() > 0;
+            case GLOBAL_ELO:
+            case KIT_ELO:
+                return stats.getMatches() > 0;
+            default:
+                return false;
+        }
     }
 
     public List<Profile> getTopProfiles(StatType type, String kit) {
@@ -90,37 +172,56 @@ public class LeaderboardCache {
 
     private Comparator<Profile> getGlobalComparator(StatType type) {
         switch (type) {
-            case WINS: return Comparator.comparingInt(Profile::getWins);
-            case LOSSES: return Comparator.comparingInt(Profile::getLosses);
-            case KILLS: return Comparator.comparingInt(Profile::getKills);
-            case DEATHS: return Comparator.comparingInt(Profile::getDeaths);
-            case WINSTREAK: return Comparator.comparingInt(Profile::getWinStreak);
-            case BEST_WINSTREAK: return Comparator.comparingInt(Profile::getBestWinStreak);
-            case MATCHES: return Comparator.comparingInt(Profile::getMatchesPlayed);
-            case LEVEL: return Comparator.comparingInt(Profile::getLevel);
-            case EXPERIENCE: return Comparator.comparingLong(Profile::getExperience);
-            case COINS: return Comparator.comparingLong(Profile::getCoins);
+            case WINS:
+                return Comparator.comparingInt(Profile::getWins);
+            case LOSSES:
+                return Comparator.comparingInt(Profile::getLosses);
+            case KILLS:
+                return Comparator.comparingInt(Profile::getKills);
+            case DEATHS:
+                return Comparator.comparingInt(Profile::getDeaths);
+            case WINSTREAK:
+                return Comparator.comparingInt(Profile::getWinStreak);
+            case BEST_WINSTREAK:
+                return Comparator.comparingInt(Profile::getBestWinStreak);
+            case MATCHES:
+                return Comparator.comparingInt(Profile::getMatchesPlayed);
+            case LEVEL:
+                return Comparator.comparingInt(Profile::getLevel);
+            case EXPERIENCE:
+                return Comparator.comparingLong(Profile::getExperience);
+            case COINS:
+                return Comparator.comparingLong(Profile::getCoins);
             case GLOBAL_ELO:
             default:
-                return Comparator.comparingDouble(p -> p.getAllKitStats().values().stream()
+                return Comparator.comparingDouble(profile -> profile.getAllKitStats().values().stream()
+                        .filter(stats -> stats.getMatches() > 0)
                         .mapToInt(KitStats::getElo)
                         .average()
-                        .orElse(1000.0));
+                        .orElse(0.0));
         }
     }
 
     private Comparator<Profile> getKitComparator(StatType type, String kitId) {
         switch (type) {
-            case WINS: return Comparator.comparingInt(p -> p.getKitStats(kitId).getWins());
-            case LOSSES: return Comparator.comparingInt(p -> p.getKitStats(kitId).getLosses());
-            case KILLS: return Comparator.comparingInt(p -> p.getKitStats(kitId).getKills());
-            case DEATHS: return Comparator.comparingInt(p -> p.getKitStats(kitId).getDeaths());
-            case WINSTREAK: return Comparator.comparingInt(p -> p.getKitStats(kitId).getWinstreak());
-            case BEST_WINSTREAK: return Comparator.comparingInt(p -> p.getKitStats(kitId).getBestWinstreak());
-            case MATCHES: return Comparator.comparingInt(p -> p.getKitStats(kitId).getMatches());
+            case WINS:
+                return Comparator.comparingInt(p -> p.findKitStats(kitId).getWins());
+            case LOSSES:
+                return Comparator.comparingInt(p -> p.findKitStats(kitId).getLosses());
+            case KILLS:
+                return Comparator.comparingInt(p -> p.findKitStats(kitId).getKills());
+            case DEATHS:
+                return Comparator.comparingInt(p -> p.findKitStats(kitId).getDeaths());
+            case WINSTREAK:
+                return Comparator.comparingInt(p -> p.findKitStats(kitId).getWinstreak());
+            case BEST_WINSTREAK:
+                return Comparator.comparingInt(p -> p.findKitStats(kitId).getBestWinstreak());
+            case MATCHES:
+                return Comparator.comparingInt(p -> p.findKitStats(kitId).getMatches());
             case GLOBAL_ELO:
+            case KIT_ELO:
             default:
-                return Comparator.comparingInt(p -> p.getKitStats(kitId).getElo());
+                return Comparator.comparingInt(p -> p.findKitStats(kitId).getElo());
         }
     }
 }

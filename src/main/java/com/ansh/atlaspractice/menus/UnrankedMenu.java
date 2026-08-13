@@ -82,19 +82,10 @@ public final class UnrankedMenu extends Menu {
             ItemMeta meta = icon.getItemMeta();
             if (meta != null) {
                 meta.setDisplayName("§f" + kit.getDisplayName());
-
                 List<String> lore = new ArrayList<>();
 
-                if (explicitDuelTarget == null) {
-                    lore.add("§7Fight other players");
-                    lore.add("§7using this kit.");
-                    lore.add("");
-                    lore.add("§eClick to join the queue.");
-                } else {
-                    lore.add("§7Challenge a player");
-                    lore.add("§7using this kit.");
-                    lore.add("");
-                    lore.add("§eClick to continue.");
+                for (String line : kit.getLore()) {
+                    lore.add(org.bukkit.ChatColor.translateAlternateColorCodes('&', line));
                 }
 
                 meta.setLore(lore);

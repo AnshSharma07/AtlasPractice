@@ -97,6 +97,8 @@ public final class DataMigrationHandler {
             try { statement.executeUpdate("ALTER TABLE atlas_profiles ADD COLUMN coins INTEGER NOT NULL DEFAULT 0;"); } catch (SQLException ignored) {}
             try { statement.executeUpdate("ALTER TABLE atlas_profiles ADD COLUMN owned_cosmetics TEXT NOT NULL DEFAULT '';"); } catch (SQLException ignored) {}
             try { statement.executeUpdate("ALTER TABLE atlas_profiles ADD COLUMN last_daily_login TEXT NOT NULL DEFAULT '';"); } catch (SQLException ignored) {}
+            try { statement.executeUpdate("ALTER TABLE atlas_profiles ADD COLUMN win_streak INT NOT NULL DEFAULT 0;"); } catch (SQLException ignored) {}
+            try { statement.executeUpdate("ALTER TABLE atlas_profiles ADD COLUMN best_win_streak INT NOT NULL DEFAULT 0;"); } catch (SQLException ignored) {}
             statement.executeUpdate("""
 CREATE TABLE IF NOT EXISTS atlas_profiles (
     uuid VARCHAR(36) PRIMARY KEY,
@@ -104,6 +106,8 @@ CREATE TABLE IF NOT EXISTS atlas_profiles (
     kills INT NOT NULL DEFAULT 0,
     deaths INT NOT NULL DEFAULT 0,
     wins INT NOT NULL DEFAULT 0,
+    win_streak INT NOT NULL DEFAULT 0,
+    best_win_streak INT NOT NULL DEFAULT 0,
 
 allow_duels INT NOT NULL DEFAULT 1,
 allow_party_invites INT NOT NULL DEFAULT 1,

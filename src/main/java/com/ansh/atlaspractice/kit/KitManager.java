@@ -69,6 +69,7 @@ public final class KitManager {
                     config.getString(path + "display-name", key);
 
             Kit kit = new Kit(key, displayName);
+            kit.setLore(config.getStringList(path + "lore"));
             kit.setKnockbackProfileName(config.getString(path + "kb-profile", "default"));
             kit.setRankedEnabled(config.getBoolean(path + "ranked", true));
             kit.setBuildAllowed(config.getBoolean(path + "build", false));
@@ -139,14 +140,11 @@ public final class KitManager {
         YamlConfiguration config =
                 YamlConfiguration.loadConfiguration(file);
         String path = "kits." + kit.getId() + ".";
-        config.set(path + "display-name",
-                kit.getDisplayName());
-        config.set(path + "kb-profile",
-                kit.getKnockbackProfileName());
-        config.set(path + "ranked",
-                kit.isRankedEnabled());
-        config.set(path + "build",
-                kit.isBuildAllowed());
+        config.set(path + "display-name", kit.getDisplayName());
+        config.set(path + "lore", kit.getLore());
+        config.set(path + "kb-profile", kit.getKnockbackProfileName());
+        config.set(path + "ranked", kit.isRankedEnabled());
+        config.set(path + "build", kit.isBuildAllowed());
         config.set(path + "damage", kit.isDamageEnabled());
         config.set(path + "durability", kit.isDurabilityEnabled());
         config.set(path + "boxing", kit.isBoxingMode());

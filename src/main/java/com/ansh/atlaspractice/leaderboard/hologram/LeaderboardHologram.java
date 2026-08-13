@@ -27,7 +27,7 @@ import com.ansh.atlaspractice.leaderboard.LeaderboardCache;
 import com.ansh.atlaspractice.leaderboard.StatType;
 import com.ansh.atlaspractice.profile.KitStats;
 import com.ansh.atlaspractice.profile.Profile;
-import org.bukkit.ChatColor;
+import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -38,36 +38,68 @@ public class LeaderboardHologram {
 
     private final String name;
     private final Location location;
+
+    @Getter
     private final StatType type;
-    private final String kit; // "NONE" or kit name
+
+    private final String kit;
     private final LeaderboardCache cache;
+    private final LeaderboardDisplaySettings settings;
     private final Hologram hologram;
 
-    public LeaderboardHologram(String name, Location location, StatType type, String kit, LeaderboardCache cache) {
+    public LeaderboardHologram(String name, Location location, StatType type, String kit,
+                               LeaderboardCache cache, LeaderboardDisplaySettings settings) {
         this.name = name;
         this.location = location;
         this.type = type;
-        this.kit = (kit == null || kit.equalsIgnoreCase("NONE")) ? null : kit;
+        this.kit = kit == null || kit.equalsIgnoreCase("NONE") ? null : kit;
         this.cache = cache;
+        this.settings = settings;
         this.hologram = new Hologram(location);
     }
 
     public void updateLines() {
         List<String> lines = new ArrayList<>();
-        lines.add(ChatColor.AQUA + ChatColor.BOLD.toString() + "Top " + type.name().replace("_", " "));
-        if (kit != null) {
-            lines.add(ChatColor.GRAY + "(" + kit + ")");
+        String stat = getStatName();
+        String kitName = kit == null ? "Overall" : kit;
+
+        String title = settings.apply(settings.getTitle(), 0, "", "", stat, kitName);
+        if (!title.isEmpty()) {
+            lines.add(title);
         }
-        lines.add("");
+
+        if (kit != null && !settings.getKitLine().isEmpty()) {
+            lines.add(settings.apply(settings.getKitLine(), 0, "", "", stat, kitName));
+        }
 
         List<Profile> top = cache.getTopProfiles(type, kit);
-        for (int i = 0; i < 10; i++) {
+
+        for (int i = 0; i < settings.getMaxEntries(); i++) {
             if (i < top.size()) {
-                Profile p = top.get(i);
-                lines.add(ChatColor.YELLOW + "#" + (i + 1) + " " + ChatColor.WHITE + p.getLastKnownName() + ChatColor.GRAY + " - " + ChatColor.AQUA + getStat(p));
+                Profile profile = top.get(i);
+
+                lines.add(settings.apply(
+                        settings.getEntry(),
+                        i + 1,
+                        profile.getLastKnownName(),
+                        getStat(profile),
+                        stat,
+                        kitName
+                ));
             } else {
-                lines.add(ChatColor.YELLOW + "#" + (i + 1) + " " + ChatColor.GRAY + "N/A");
+                lines.add(settings.apply(
+                        settings.getEmpty(),
+                        i + 1,
+                        "",
+                        "",
+                        stat,
+                        kitName
+                ));
             }
+        }
+
+        if (!settings.getFooter().isEmpty()) {
+            lines.add(settings.apply(settings.getFooter(), 0, "", "", stat, kitName));
         }
 
         hologram.destroy();
@@ -75,46 +107,90 @@ public class LeaderboardHologram {
         spawn();
     }
 
-    private String getStat(Profile p) {
+    private String getStatName() {
+        switch (type) {
+            case KIT_ELO:
+            case GLOBAL_ELO:
+                return "ELO";
+            default:
+                return type.name().replace('_', ' ');
+        }
+    }
+
+    private String getStat(Profile profile) {
         if (kit != null) {
-            KitStats ks = p.getKitStats(kit);
+            KitStats stats = profile.findKitStats(kit);
+            if (stats == null) {
+                return "0";
+            }
+
             switch (type) {
-                case WINS: return String.valueOf(ks.getWins());
-                case LOSSES: return String.valueOf(ks.getLosses());
-                case KILLS: return String.valueOf(ks.getKills());
-                case DEATHS: return String.valueOf(ks.getDeaths());
-                case WINSTREAK: return String.valueOf(ks.getWinstreak());
-                case BEST_WINSTREAK: return String.valueOf(ks.getBestWinstreak());
-                case MATCHES: return String.valueOf(ks.getMatches());
+                case WINS:
+                    return String.valueOf(stats.getWins());
+                case LOSSES:
+                    return String.valueOf(stats.getLosses());
+                case KILLS:
+                    return String.valueOf(stats.getKills());
+                case DEATHS:
+                    return String.valueOf(stats.getDeaths());
+                case WINSTREAK:
+                    return String.valueOf(stats.getWinstreak());
+                case BEST_WINSTREAK:
+                    return String.valueOf(stats.getBestWinstreak());
+                case MATCHES:
+                    return String.valueOf(stats.getMatches());
+                case KIT_ELO:
                 case GLOBAL_ELO:
                 default:
-                    return String.valueOf(ks.getElo());
+                    return String.valueOf(stats.getElo());
             }
         }
 
         switch (type) {
-            case WINS: return String.valueOf(p.getWins());
-            case LOSSES: return String.valueOf(p.getLosses());
-            case KILLS: return String.valueOf(p.getKills());
-            case DEATHS: return String.valueOf(p.getDeaths());
-            case WINSTREAK: return String.valueOf(p.getWinStreak());
-            case BEST_WINSTREAK: return String.valueOf(p.getBestWinStreak());
-            case MATCHES: return String.valueOf(p.getMatchesPlayed());
+            case WINS:
+                return String.valueOf(profile.getWins());
+            case LOSSES:
+                return String.valueOf(profile.getLosses());
+            case KILLS:
+                return String.valueOf(profile.getKills());
+            case DEATHS:
+                return String.valueOf(profile.getDeaths());
+            case WINSTREAK:
+                return String.valueOf(profile.getWinStreak());
+            case BEST_WINSTREAK:
+                return String.valueOf(profile.getBestWinStreak());
+            case MATCHES:
+                return String.valueOf(profile.getMatchesPlayed());
             case GLOBAL_ELO:
-            default:
-                return String.format("%.0f", p.getAllKitStats().values().stream()
+                return String.format("%.0f", profile.getAllKitStats().values().stream()
+                        .filter(stats -> stats.getMatches() > 0)
                         .mapToInt(KitStats::getElo)
                         .average()
                         .orElse(1000.0));
+            default:
+                return "0";
         }
     }
 
     public void spawn() {
-        if (location.getWorld() == null) return;
-        for (Player p : location.getWorld().getPlayers()) {
-            if (p.getLocation().distanceSquared(location) < 2500) { // 50 blocks
-                hologram.spawn(p);
+        if (location.getWorld() == null) {
+            return;
+        }
+
+        for (Player player : location.getWorld().getPlayers()) {
+            if (player.getLocation().distanceSquared(location) < 2500) {
+                hologram.spawn(player);
             }
+        }
+    }
+
+    public void spawnForPlayer(Player player) {
+        if (!location.getWorld().getUID().equals(player.getWorld().getUID())) {
+            return;
+        }
+
+        if (player.getLocation().distanceSquared(location) < 2500) {
+            hologram.spawn(player);
         }
     }
 
@@ -122,5 +198,15 @@ public class LeaderboardHologram {
         hologram.destroy();
     }
 
-    public String getName() { return name; }
+    public String getName() {
+        return name;
+    }
+
+    public Location getLocation() {
+        return location.clone();
+    }
+
+    public String getKit() {
+        return kit;
+    }
 }

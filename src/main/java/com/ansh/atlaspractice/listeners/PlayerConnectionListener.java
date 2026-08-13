@@ -27,6 +27,7 @@ import com.ansh.atlaspractice.AtlasPracticePlugin;
 import com.ansh.atlaspractice.profile.Profile;
 import com.ansh.atlaspractice.profile.ProfileManager;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -82,6 +83,9 @@ public final class PlayerConnectionListener implements Listener {
         this.plugin.getInventoryUtil().applyLobbyHotbarItems(player);
 
         event.setJoinMessage("§7[§a+§7] §b" + player.getName());
+        Bukkit.getScheduler().runTask(this.plugin, () ->
+                this.plugin.getLeaderboardManager().spawnForPlayer(player)
+        );
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

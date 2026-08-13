@@ -80,7 +80,7 @@ public final class SQLiteDatabase implements DatabaseService {
 
             try (PreparedStatement fetchGlobalStatement =
                          connection.prepareStatement(
-                                 "SELECT kills, deaths, wins, allow_duels, allow_party_invites, " +
+                                 "SELECT kills, deaths, wins, win_streak, best_win_streak, allow_duels, allow_party_invites, " +
                                          "scoreboard_visible, scoreboard_enabled, time_mode, chat_mode, " +
                                          "auto_gg, auto_requeue, map_selection_preference, " +
                                          "cosmetic_kill_effect, cosmetic_victory_effect, " +
@@ -97,6 +97,8 @@ public final class SQLiteDatabase implements DatabaseService {
                         profile.setKills(rs.getInt("kills"));
                         profile.setDeaths(rs.getInt("deaths"));
                         profile.setWins(rs.getInt("wins"));
+                        profile.setWinStreak(rs.getInt("win_streak"));
+                        profile.setBestWinStreak(rs.getInt("best_win_streak"));
 
                         profile.setAllowDuels(
                                 rs.getInt("allow_duels") == 1
@@ -241,7 +243,7 @@ public final class SQLiteDatabase implements DatabaseService {
                 try (PreparedStatement saveGlobalStatement =
                              connection.prepareStatement(
                                      "UPDATE atlas_profiles SET " +
-                                             "kills = ?, deaths = ?, wins = ?, " +
+                                             "kills = ?, deaths = ?, wins = ?, win_streak = ?, best_win_streak = ?, " +
                                              "allow_duels = ?, allow_party_invites = ?, " +
                                              "scoreboard_visible = ?, scoreboard_enabled = ?, " +
                                              "time_mode = ?, chat_mode = ?, auto_gg = ?, " +
@@ -256,34 +258,30 @@ public final class SQLiteDatabase implements DatabaseService {
                     saveGlobalStatement.setInt(1, profile.getKills());
                     saveGlobalStatement.setInt(2, profile.getDeaths());
                     saveGlobalStatement.setInt(3, profile.getWins());
-                    saveGlobalStatement.setInt(4, profile.isAllowDuels() ? 1 : 0);
-                    saveGlobalStatement.setInt(5, profile.isAllowPartyInvites() ? 1 : 0);
-                    saveGlobalStatement.setInt(6, profile.isScoreboardVisible() ? 1 : 0);
-                    saveGlobalStatement.setInt(7, profile.isScoreboardEnabled() ? 1 : 0);
-                    saveGlobalStatement.setString(8, profile.getTimeMode().name());
-                    saveGlobalStatement.setString(9, profile.getChatMode().name());
-                    saveGlobalStatement.setInt(10, profile.isAutoGg() ? 1 : 0);
-                    saveGlobalStatement.setInt(11, profile.isAutoRequeue() ? 1 : 0);
-
-                    saveGlobalStatement.setString(
-                            12,
-                            profile.getMapSelectionPreference().name()
-                    );
-
-                    saveGlobalStatement.setString(13, profile.getCosmetics().getKillEffect());
-                    saveGlobalStatement.setString(14, profile.getCosmetics().getVictoryEffect());
-                    saveGlobalStatement.setString(15, profile.getCosmetics().getProjectileTrail());
-                    saveGlobalStatement.setString(16, profile.getCosmetics().getWalkingTrail());
-                    saveGlobalStatement.setString(17, profile.getCosmetics().getAura());
-                    saveGlobalStatement.setString(18, profile.getCosmetics().getChatColor());
-                    saveGlobalStatement.setString(19, profile.getCosmetics().getKillMessage());
-                    saveGlobalStatement.setLong(20, profile.getExperience());
-                    saveGlobalStatement.setInt(21, profile.getLevel());
-                    saveGlobalStatement.setLong(22, profile.getCoins());
-                    saveGlobalStatement.setString(23, profile.getCosmetics().serializeOwnedCosmetics());
-                    saveGlobalStatement.setString(24, profile.getLastDailyLogin());
-                    saveGlobalStatement.setString(25, stringUuid);
-
+                    saveGlobalStatement.setInt(4, profile.getWinStreak());
+                    saveGlobalStatement.setInt(5, profile.getBestWinStreak());
+                    saveGlobalStatement.setInt(6, profile.isAllowDuels() ? 1 : 0);
+                    saveGlobalStatement.setInt(7, profile.isAllowPartyInvites() ? 1 : 0);
+                    saveGlobalStatement.setInt(8, profile.isScoreboardVisible() ? 1 : 0);
+                    saveGlobalStatement.setInt(9, profile.isScoreboardEnabled() ? 1 : 0);
+                    saveGlobalStatement.setString(10, profile.getTimeMode().name());
+                    saveGlobalStatement.setString(11, profile.getChatMode().name());
+                    saveGlobalStatement.setInt(12, profile.isAutoGg() ? 1 : 0);
+                    saveGlobalStatement.setInt(13, profile.isAutoRequeue() ? 1 : 0);
+                    saveGlobalStatement.setString(14, profile.getMapSelectionPreference().name());
+                    saveGlobalStatement.setString(15, profile.getCosmetics().getKillEffect());
+                    saveGlobalStatement.setString(16, profile.getCosmetics().getVictoryEffect());
+                    saveGlobalStatement.setString(17, profile.getCosmetics().getProjectileTrail());
+                    saveGlobalStatement.setString(18, profile.getCosmetics().getWalkingTrail());
+                    saveGlobalStatement.setString(19, profile.getCosmetics().getAura());
+                    saveGlobalStatement.setString(20, profile.getCosmetics().getChatColor());
+                    saveGlobalStatement.setString(21, profile.getCosmetics().getKillMessage());
+                    saveGlobalStatement.setLong(22, profile.getExperience());
+                    saveGlobalStatement.setInt(23, profile.getLevel());
+                    saveGlobalStatement.setLong(24, profile.getCoins());
+                    saveGlobalStatement.setString(25, profile.getCosmetics().serializeOwnedCosmetics());
+                    saveGlobalStatement.setString(26, profile.getLastDailyLogin());
+                    saveGlobalStatement.setString(27, stringUuid);
                     saveGlobalStatement.executeUpdate();
                 }
 // save permit stats

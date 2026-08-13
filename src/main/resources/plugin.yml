@@ -65,7 +65,7 @@ commands:
     permission: atlaspractice.admin
 
   atlasleaderboard:
-    aliases: [lb, leaderboards]
+    aliases: [lb, leaderboards, atlaslb]
     description: Manage holograms and leaderboards.
     permission: atlaspractice.admin
 

@@ -26,13 +26,14 @@ package com.ansh.atlaspractice.menus;
 import com.ansh.atlaspractice.AtlasPracticePlugin;
 import com.ansh.atlaspractice.kit.Kit;
 import com.ansh.atlaspractice.profile.Profile;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
-import com.ansh.atlaspractice.profile.Profile;
+
 /**
  * Ranked queue kit selector.
  * Only shows kits that are enabled inside ranked.yml â€” not kits.yml.
@@ -79,11 +80,13 @@ public final class RankedMenu extends Menu {
             ItemMeta meta = icon.getItemMeta();
             if (meta != null) {
                 meta.setDisplayName("§a§l" + kit.getDisplayName());
-                meta.setLore(Arrays.asList(
-                        "§7Your Rating: §e" + currentElo + " ELO",
-                        "",
-                        "§eClick to join ranked queue."
-                ));
+                List<String> lore = new ArrayList<>();
+
+                for (String line : kit.getLore()) {
+                    lore.add(ChatColor.translateAlternateColorCodes('&', line));
+                }
+
+                meta.setLore(lore);
                 icon.setItemMeta(meta);
             }
 

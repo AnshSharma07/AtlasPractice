@@ -51,13 +51,22 @@ public final class Kit {
     private boolean comboMode = false;
     private boolean rankedEnabled;
     private boolean buildAllowed;
+    private List<String> lore = new ArrayList<>();
     public Kit createClone() {
         Kit clone = new Kit(this.id, this.displayName);
         clone.setMainContents(this.mainContents.clone());
         clone.setArmorContents(this.armorContents.clone());
         clone.setIconMaterial(this.iconMaterial);
         clone.setDurabilityEnabled(this.durabilityEnabled);
+        clone.setLore(this.lore);
         return clone;
+    }
+    public List<String> getLore() {
+        return lore;
+    }
+
+    public void setLore(List<String> lore) {
+        this.lore = lore != null ? new ArrayList<>(lore) : new ArrayList<>();
     }
     public boolean isHungerLossEnabled() {
         return hungerLossEnabled;
@@ -298,7 +307,7 @@ public final class Kit {
         copy.setDamageEnabled(this.damageEnabled);
         copy.setBoxingMode(this.boxingMode);
         copy.setHungerLossEnabled(this.hungerLossEnabled);
-
+        copy.setLore(this.lore);
         return copy;
     }
 }

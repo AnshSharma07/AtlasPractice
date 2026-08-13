@@ -59,7 +59,7 @@ public final class PracticeCommandExecutor implements CommandExecutor {
         }
 
         player.sendMessage("§7§m--------------------------------------------------");
-        player.sendMessage("§6§lAtlasPractice v1.0.2");
+        player.sendMessage("§6§lAtlasPractice v1.0.3");
         player.sendMessage("§eType §6/duel <name> §eto challenge an active lobby player.");
         player.sendMessage("§eType §6/party §eto look up party systems.");
         player.sendMessage("§eType §6/stats §eto view stats.");

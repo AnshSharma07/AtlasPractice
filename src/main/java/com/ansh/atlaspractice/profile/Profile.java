@@ -141,6 +141,13 @@ public final class Profile {
     public KitStats getKitStats(String kitId) {
         return kitStats.computeIfAbsent(kitId.toLowerCase(), KitStats::new);
     }
+
+    public KitStats findKitStats(String kitId) {
+        if (kitId == null) {
+            return null;
+        }
+        return kitStats.get(kitId.toLowerCase());
+    }
     public UUID getPartyId() { return activePartyId; }
     public void setPartyId(UUID partyId) { this.activePartyId = partyId; }
     public UUID getActivePartyId() { return activePartyId; }

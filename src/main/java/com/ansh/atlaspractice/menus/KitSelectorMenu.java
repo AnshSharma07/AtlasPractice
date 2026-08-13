@@ -169,9 +169,11 @@ public final class KitSelectorMenu implements Listener {
             meta.setDisplayName(ChatColor.YELLOW + kit.getDisplayName());
 
             List<String> lore = new ArrayList<>();
-            lore.add(ChatColor.GRAY + "Click to edit this kit.");
-            lore.add("");
-            lore.add(ChatColor.YELLOW + "Click to open.");
+
+            for (String line : kit.getLore()) {
+                lore.add(ChatColor.translateAlternateColorCodes('&', line));
+            }
+
             meta.setLore(lore);
 
             item.setItemMeta(meta);
