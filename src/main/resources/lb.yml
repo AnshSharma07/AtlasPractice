@@ -1,0 +1,25 @@
+# Leaderboards are saved here automatically.
+#
+# style controls how the hologram looks. The available styles are in config.yml.
+# You can change a leaderboard from "default" to another style without recreating it.
+#
+# Available placeholders in a style:
+# {stat}      leaderboard stat, for example WINS or ELO
+# {type}      same as {stat}
+# {kit}       kit name, or Overall
+# {position}  leaderboard position
+# {player}    player name
+# {value}     player's value for this leaderboard
+#
+# Example:
+# holograms:
+#   lb_wins_global:
+#     world: world
+#     x: 0.0
+#     y: 80.0
+#     z: 0.0
+#     type: WINS
+#     kit: NONE
+#     style: default
+
+holograms: {}
