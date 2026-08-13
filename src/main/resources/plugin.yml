@@ -3,7 +3,7 @@ main: com.ansh.atlaspractice.AtlasPracticePlugin
 version: 1.0.2
 author: Ansh Sharma
 depend: [SlimeWorldManager]
-softdepend: [AdvancedReplay]
+softdepend: [AdvancedReplay, AtlasMore]
 
 commands:
   randomqueue:

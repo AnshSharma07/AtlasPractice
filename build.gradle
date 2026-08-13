@@ -47,13 +47,8 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.36'
     annotationProcessor 'org.projectlombok:lombok:1.18.36'
 
-    /*
-     * Optional local jars
-     */
+
     compileOnly files('libs/ProtocolLib-4.8.0.jar')
-    compileOnly files('libs/worldedit-6.1.9.jar')
-    compileOnly files('libs/worldguard-6.2.jar')
-    compileOnly files('libs/ajLeaderboards-2.11.0.jar')
     compileOnly files('libs/citizens.jar')
 }
 
