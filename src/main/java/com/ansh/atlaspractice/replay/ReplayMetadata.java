@@ -30,19 +30,30 @@ import java.util.List;
 import java.util.UUID;
 
 public final class ReplayMetadata {
+
     private final String replayId;
     private final UUID replayUuid;
     private final UUID matchId;
     private final String arena;
     private final String kit;
     private final List<String> players;
-    private String winner;
-    private String loser;
-    private long durationMillis;
     private final Instant date;
     private final String matchType;
 
-    public ReplayMetadata(String replayId, UUID replayUuid, UUID matchId, String arena, String kit, List<String> players, Instant date, String matchType) {
+    private String winner;
+    private String loser;
+    private long durationMillis;
+
+    public ReplayMetadata(
+            String replayId,
+            UUID replayUuid,
+            UUID matchId,
+            String arena,
+            String kit,
+            List<String> players,
+            Instant date,
+            String matchType
+    ) {
         this.replayId = replayId;
         this.replayUuid = replayUuid;
         this.matchId = matchId;
@@ -51,22 +62,64 @@ public final class ReplayMetadata {
         this.players = Collections.unmodifiableList(new ArrayList<>(players));
         this.date = date;
         this.matchType = matchType;
-        this.winner = "Unknown";
-        this.loser = "Unknown";
+
+        winner = "Unknown";
+        loser = "Unknown";
     }
 
-    public String getReplayId() { return replayId; }
-    public UUID getReplayUuid() { return replayUuid; }
-    public UUID getMatchId() { return matchId; }
-    public String getArena() { return arena; }
-    public String getKit() { return kit; }
-    public List<String> getPlayers() { return players; }
-    public String getWinner() { return winner; }
-    public void setWinner(String winner) { this.winner = winner == null ? "Unknown" : winner; }
-    public String getLoser() { return loser; }
-    public void setLoser(String loser) { this.loser = loser == null ? "Unknown" : loser; }
-    public long getDurationMillis() { return durationMillis; }
-    public void setDurationMillis(long durationMillis) { this.durationMillis = Math.max(0L, durationMillis); }
-    public Instant getDate() { return date; }
-    public String getMatchType() { return matchType; }
+    public String getReplayId() {
+        return replayId;
+    }
+
+    public UUID getReplayUuid() {
+        return replayUuid;
+    }
+
+    public UUID getMatchId() {
+        return matchId;
+    }
+
+    public String getArena() {
+        return arena;
+    }
+
+    public String getKit() {
+        return kit;
+    }
+
+    public List<String> getPlayers() {
+        return players;
+    }
+
+    public String getWinner() {
+        return winner;
+    }
+
+    public void setWinner(String winner) {
+        this.winner = winner == null ? "Unknown" : winner;
+    }
+
+    public String getLoser() {
+        return loser;
+    }
+
+    public void setLoser(String loser) {
+        this.loser = loser == null ? "Unknown" : loser;
+    }
+
+    public long getDurationMillis() {
+        return durationMillis;
+    }
+
+    public void setDurationMillis(long durationMillis) {
+        this.durationMillis = Math.max(0L, durationMillis);
+    }
+
+    public Instant getDate() {
+        return date;
+    }
+
+    public String getMatchType() {
+        return matchType;
+    }
 }

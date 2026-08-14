@@ -24,15 +24,15 @@
 package com.ansh.atlaspractice.adapters;
 
 import com.ansh.atlaspractice.AtlasPracticePlugin;
-import com.ansh.atlaspractice.leaderboard.LeaderboardManager;
 import com.ansh.atlaspractice.leaderboard.StatType;
 import com.ansh.atlaspractice.profile.Profile;
 import com.ansh.atlaspractice.profile.ProfileManager;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 
 @RequiredArgsConstructor
