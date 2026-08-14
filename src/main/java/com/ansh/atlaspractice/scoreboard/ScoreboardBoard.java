@@ -60,10 +60,9 @@ public final class ScoreboardBoard {
 
         hp.setDisplaySlot(DisplaySlot.PLAYER_LIST);
         hp.setDisplayName("§c❤");
-        // Pre-build structural Team slots to prevent client rendering flicker
         for (int i = 0; i < 15; i++) {
             Team entryTeam = this.scoreboard.registerNewTeam("sb_line_" + i);
-            String entryIdentifier = "§" + ChatColorEntries.values()[i].getColorCode() + "§r";
+            String entryIdentifier = "§" + ChatColorEntries.values()[i].getColorCode();
             entryTeam.addEntry(entryIdentifier);
             //     this.objective.getScore(entryIdentifier).setScore(15 - i);
             this.linesCache.add(entryTeam);
@@ -79,7 +78,7 @@ public final class ScoreboardBoard {
         for (int i = 0; i < 15; i++) {
             Team entryTeam = this.linesCache.get(i);
 
-            String entryIdentifier = "§" + ChatColorEntries.values()[i].getColorCode() + "§r";
+            String entryIdentifier = "§" + ChatColorEntries.values()[i].getColorCode();
 
             if (i < lines.size()) {
                 String targetLine = lines.get(i);
@@ -90,21 +89,17 @@ public final class ScoreboardBoard {
                 } else {
                     String prefix = targetLine.substring(0, 16);
 
-                    // Avoid cutting a color code in half
                     if (prefix.endsWith("§")) {
                         prefix = prefix.substring(0, 15);
                     }
 
                     String suffix = targetLine.substring(prefix.length());
 
-                    // Preserve colors
                     suffix = ChatColor.getLastColors(prefix) + suffix;
 
-                    // Trim suffix safely
                     if (suffix.length() > 16) {
                         suffix = suffix.substring(0, 16);
 
-                        // Avoid ending on half a color code
                         if (suffix.endsWith("§")) {
                             suffix = suffix.substring(0, 15);
                         }

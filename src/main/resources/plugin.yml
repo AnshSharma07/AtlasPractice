@@ -1,6 +1,6 @@
 name: AtlasPractice
 main: com.ansh.atlaspractice.AtlasPracticePlugin
-version: 1.0.2
+version: 1.0.3
 author: Ansh Sharma
 depend: [SlimeWorldManager]
 softdepend: [AdvancedReplay, AtlasMore]

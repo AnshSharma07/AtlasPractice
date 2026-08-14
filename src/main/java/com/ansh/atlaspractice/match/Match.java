@@ -29,25 +29,21 @@ import com.ansh.atlaspractice.arena.ArenaState;
 import com.ansh.atlaspractice.bots.PracticeBot;
 import com.ansh.atlaspractice.kit.Kit;
 import com.ansh.atlaspractice.profile.KitStats;
+import com.ansh.atlaspractice.profile.Profile;
+import com.ansh.atlaspractice.team.TeamColor;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
-import java.util.ArrayList;
-import com.ansh.atlaspractice.team.TeamColor;
-import com.ansh.atlaspractice.profile.Profile;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-import java.util.HashMap;
-import java.util.Map;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
+
+import java.util.*;
+
 public abstract class Match {
 
     private final UUID id;
@@ -260,8 +256,21 @@ public abstract class Match {
                 } else {
                     kit.applyToPlayer(
                             player,
+                            profile,
                             team.getTeamColor()
                     );
+                    if (kit.isBoxingMode()) {
+                        player.addPotionEffect(
+                                new org.bukkit.potion.PotionEffect(
+                                        org.bukkit.potion.PotionEffectType.SPEED,
+                                        Integer.MAX_VALUE,
+                                        1,
+                                        false,
+                                        false
+                                ),
+                                true
+                        );
+                    }
                     if (kit.isComboMode()) {
                         player.setMaximumNoDamageTicks(5);
                     }
