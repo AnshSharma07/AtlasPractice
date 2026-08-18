@@ -4,7 +4,7 @@ A **Minecraft 1.8.8 Practice PvP** plugin built for competitive servers.
 
 AtlasPractice focuses on performance, customization, and ease of use while providing a polished practice experience with modern features such as dynamic arenas, ranked queues, cosmetics, replays, parties, and much more.
 
-> **Current Version:** 1.0.0
+> **Current Version:** 1.0.3
 > **Minecraft Version:** 1.8.8 (PandaSpigot/Spigot)
 > **Java:** 17
 
