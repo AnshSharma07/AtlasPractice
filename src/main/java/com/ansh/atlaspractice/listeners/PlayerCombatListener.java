@@ -24,15 +24,14 @@
 package com.ansh.atlaspractice.listeners;
 
 import com.ansh.atlaspractice.AtlasPracticePlugin;
-import com.ansh.atlaspractice.match.BotMatch;
 import com.ansh.atlaspractice.match.DuelMatch;
 import com.ansh.atlaspractice.match.Match;
 import com.ansh.atlaspractice.match.MatchManager;
 import com.ansh.atlaspractice.match.MatchTeam;
-import com.ansh.atlaspractice.party.PartyMatch;
 import com.ansh.atlaspractice.profile.Profile;
 import com.ansh.atlaspractice.profile.ProfileManager;
 import com.ansh.atlaspractice.profile.ProfileState;
+import com.ansh.atlaspractice.util.CombatActionBar;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -95,12 +94,16 @@ public final class PlayerCombatListener implements Listener {
             return;
         }
 
-        Match match = this.matchManager.getLiveMatch(attackerMatchId);if (match.getKit().isComboMode()) {
+        Match match = this.matchManager.getLiveMatch(attackerMatchId);
+        if (match == null || match.getState() != Match.MatchState.FIGHTING) {
+            event.setCancelled(true);
+            return;
+        }
+        if (match.getKit().isComboMode()) {
             victim.setNoDamageTicks(0);
         }
         if (match == null
                 || match.getState() != Match.MatchState.FIGHTING) {
-
             event.setCancelled(true);
             return;
         }
@@ -130,9 +133,21 @@ public final class PlayerCombatListener implements Listener {
                 return;
             }
         }
-
-        // Direct PvP transaction confirmed: Commit to central match manager tracking
         this.matchManager.setLastAttacker(victim.getUniqueId(), attacker.getUniqueId());
+        // Action bar hp and kill display
+        if (match.getKit().isDamageEnabled()) {
+
+            double remainingHealth =
+                    Math.max(0.0D, victim.getHealth() - event.getFinalDamage());
+
+            if (remainingHealth > 0.0D) {
+                CombatActionBar.showHealth(
+                        attacker,
+                        victim,
+                        remainingHealth
+                );
+            }
+        }
         if (noDamage) {
 
             event.setDamage(0.0);

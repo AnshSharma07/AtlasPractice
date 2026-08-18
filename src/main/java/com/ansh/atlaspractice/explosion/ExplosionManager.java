@@ -40,21 +40,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Handles custom explosions for TNT and Fireball with Minemen-style knockback.
- *
- * <h3>Knockback model (Minemen-style)</h3>
- * <ul>
- *   <li>Blast force is computed as {@code (1 - dist/radius) ^ 0.5}, giving a
- *       steeper fall-off than vanilla (which uses {@code ^ 0.55}).</li>
- *   <li>The blast vector is <em>added</em> to the player's current velocity
- *       rather than being mixed in at a dampened ratio.  This preserves
- *       momentum so players can stack velocity with consecutive hits.</li>
- *   <li>TNT: strong horizontal push + firm vertical lift.</li>
- *   <li>Fireball: slightly stronger outward force + sharper upward kick;
- *       self-boost retained for the shooter.</li>
- * </ul>
- */
 public final class ExplosionManager {
 
     private final AtlasPracticePlugin plugin;
@@ -63,181 +48,284 @@ public final class ExplosionManager {
         this.plugin = plugin;
     }
 
-    public void createCustomExplosion(Location loc, ExplosionType type, Entity source) {
-        ExplosionConfig cfg = plugin.getExplosionConfig();
+    public void createCustomExplosion(Location location, ExplosionType type, Entity source) {
+        ExplosionConfig config = plugin.getExplosionConfig();
 
-        double radius         = type == ExplosionType.TNT ? cfg.getTntRadius()    : cfg.getFireballRadius();
-        double knockback      = type == ExplosionType.TNT ? cfg.getTntKnockback() : cfg.getFireballKnockback();
-        boolean breakPlaced   = type == ExplosionType.TNT ? cfg.isTntBreakPlacedBlocks()    : cfg.isFireballBreakPlacedBlocks();
-        boolean breakBreakable= type == ExplosionType.TNT ? cfg.isTntBreakBreakableBlocks() : cfg.isFireballBreakBreakableBlocks();
-        boolean breakEndstone = type == ExplosionType.TNT ? cfg.isTntBreakEndstone()        : cfg.isFireballBreakEndstone();
-        boolean breakBeds     = type == ExplosionType.TNT ? cfg.isTntBreakBeds()            : cfg.isFireballBreakBeds();
+        boolean isTnt = type == ExplosionType.TNT;
 
-        // Visual / audio
-        loc.getWorld().playEffect(loc, Effect.EXPLOSION_LARGE, 1);
-        loc.getWorld().playSound(loc, Sound.EXPLODE, 1.0F, 1.0F);
+        double radius = isTnt
+                ? config.getTntRadius()
+                : config.getFireballRadius();
 
-        // Resolve the match this explosion belongs to.
-        Optional<Match> matchOpt = resolveMatch(loc, source);
-        if (matchOpt.isEmpty()) {
+        double knockback = isTnt
+                ? config.getTntKnockback()
+                : config.getFireballKnockback();
+
+        boolean breakPlacedBlocks = isTnt
+                ? config.isTntBreakPlacedBlocks()
+                : config.isFireballBreakPlacedBlocks();
+
+        boolean breakBreakableBlocks = isTnt
+                ? config.isTntBreakBreakableBlocks()
+                : config.isFireballBreakBreakableBlocks();
+
+        boolean breakEndstone = isTnt
+                ? config.isTntBreakEndstone()
+                : config.isFireballBreakEndstone();
+
+        boolean breakBeds = isTnt
+                ? config.isTntBreakBeds()
+                : config.isFireballBreakBeds();
+
+        // Show the explosion effect.
+        location.getWorld().playEffect(location, Effect.EXPLOSION_LARGE, 1);
+        location.getWorld().playSound(location, Sound.EXPLODE, 1.0F, 1.0F);
+
+        Optional<Match> matchOptional = findMatch(location, source);
+        if (matchOptional.isEmpty()) {
             return;
         }
 
-        Match match = matchOpt.get();
+        Match match = matchOptional.get();
         Arena arena = match.getArena();
 
-        // --- Block destruction ---
-        applyBlockDamage(loc, radius, match, arena,
-                breakPlaced, breakBreakable, breakEndstone, breakBeds);
+        destroyBlocks(
+                location,
+                radius,
+                match,
+                arena,
+                breakPlacedBlocks,
+                breakBreakableBlocks,
+                breakEndstone,
+                breakBeds
+        );
 
-        // --- Player knockback (Minemen-style) ---
-        applyKnockback(loc, radius, knockback, type, source, match);
+        applyKnockback(
+                location,
+                radius,
+                knockback,
+                type,
+                source,
+                match
+        );
     }
 
-    /** Finds the {@link Match} associated with the explosion source. */
-    private Optional<Match> resolveMatch(Location loc, Entity source) {
+    private Optional<Match> findMatch(Location location, Entity source) {
+        // If a player caused the explosion, use their current match.
         if (source instanceof Player) {
-            return plugin.getMatchManager().getMatchByPlayer(source.getUniqueId());
+            return plugin.getMatchManager()
+                    .getMatchByPlayer(source.getUniqueId());
         }
-        // For entity-based explosions (e.g., TNT placed by a player then
-        // detonated without a direct player reference), scan nearby players.
-        for (Player player : loc.getWorld().getPlayers()) {
-            Optional<Match> possible = plugin.getMatchManager().getMatchByPlayer(player.getUniqueId());
-            if (possible.isPresent()) {
-                Match m = possible.get();
-                if (m.getArena() != null && isWithinArenaBoundaries(loc, m.getArena())) {
-                    return possible;
-                }
+
+        // For TNT and other explosions without a player source,
+        // find a nearby player who belongs to an arena match.
+        for (Player player : location.getWorld().getPlayers()) {
+            Optional<Match> matchOptional =
+                    plugin.getMatchManager().getMatchByPlayer(player.getUniqueId());
+
+            if (matchOptional.isEmpty()) {
+                continue;
+            }
+
+            Match match = matchOptional.get();
+
+            if (match.getArena() == null) {
+                continue;
+            }
+
+            if (isInsideArena(location, match.getArena())) {
+                return matchOptional;
             }
         }
+
         return Optional.empty();
     }
 
-    private void applyBlockDamage(
-            Location loc, double radius, Match match, Arena arena,
-            boolean breakPlaced, boolean breakBreakable,
-            boolean breakEndstone, boolean breakBeds) {
-
+    private void destroyBlocks(
+            Location location,
+            double radius,
+            Match match,
+            Arena arena,
+            boolean breakPlacedBlocks,
+            boolean breakBreakableBlocks,
+            boolean breakEndstone,
+            boolean breakBeds
+    ) {
         int blockRadius = (int) Math.ceil(radius);
-        List<Block> toDestroy = new ArrayList<>();
+        List<Block> blocksToBreak = new ArrayList<>();
 
         for (int x = -blockRadius; x <= blockRadius; x++) {
             for (int y = -blockRadius; y <= blockRadius; y++) {
                 for (int z = -blockRadius; z <= blockRadius; z++) {
-                    Location target = loc.clone().add(x, y, z);
-                    if (loc.distance(target) > radius) continue;
 
-                    Block block = target.getBlock();
-                    if (block.getType() == Material.AIR) continue;
-                    if (block.getType() == Material.BED_BLOCK && !breakBeds) continue;
+                    Location blockLocation = location.clone().add(x, y, z);
 
-                    String blockKey = block.getLocation().getBlockX() + ":"
-                            + block.getLocation().getBlockY() + ":"
-                            + block.getLocation().getBlockZ();
+                    if (location.distance(blockLocation) > radius) {
+                        continue;
+                    }
 
-                    boolean isPlayerPlaced = match.getPlacedBlocks()
-                            .contains(arena.getId().toLowerCase() + ":" + blockKey)
-                            || match.getPlacedBlocks().contains(blockKey);
+                    Block block = blockLocation.getBlock();
 
-                    boolean isArenaBreakable = arena.getBreakableBlocks()
-                            .contains(block.getType().name() + ":" + block.getData())
-                            || arena.getBreakableBlocks().contains(block.getType().name());
+                    if (block.getType() == Material.AIR) {
+                        continue;
+                    }
+
+                    if (block.getType() == Material.BED_BLOCK && !breakBeds) {
+                        continue;
+                    }
+
+                    String blockKey =
+                            block.getLocation().getBlockX() + ":"
+                                    + block.getLocation().getBlockY() + ":"
+                                    + block.getLocation().getBlockZ();
+
+                    String arenaBlockKey =
+                            arena.getId().toLowerCase() + ":" + blockKey;
+
+                    boolean playerPlaced =
+                            match.getPlacedBlocks().contains(blockKey)
+                                    || match.getPlacedBlocks().contains(arenaBlockKey);
+
+                    boolean arenaBreakable =
+                            arena.getBreakableBlocks().contains(
+                                    block.getType().name() + ":" + block.getData()
+                            )
+                                    || arena.getBreakableBlocks().contains(
+                                    block.getType().name()
+                            );
 
                     if (block.getType() == Material.ENDER_STONE) {
-                        if (breakEndstone) toDestroy.add(block);
-                    } else if (isArenaBreakable) {
-                        if (breakBreakable) toDestroy.add(block);
-                    } else if (isPlayerPlaced) {
-                        if (breakPlaced) toDestroy.add(block);
+                        if (breakEndstone) {
+                            blocksToBreak.add(block);
+                        }
+                    } else if (arenaBreakable) {
+                        if (breakBreakableBlocks) {
+                            blocksToBreak.add(block);
+                        }
+                    } else if (playerPlaced) {
+                        if (breakPlacedBlocks) {
+                            blocksToBreak.add(block);
+                        }
                     }
                 }
             }
         }
 
-        for (Block b : toDestroy) {
-            b.setType(Material.AIR);
+        for (Block block : blocksToBreak) {
+            block.setType(Material.AIR);
         }
     }
 
-    private void applyKnockback(Location loc, double radius, double knockback,
-                                ExplosionType type, Entity source, Match match) {
-
-        double radiusSq = radius * radius;
+    private void applyKnockback(
+            Location location,
+            double radius,
+            double knockback,
+            ExplosionType type,
+            Entity source,
+            Match match
+    ) {
         boolean isTnt = type == ExplosionType.TNT;
+        double radiusSquared = radius * radius;
 
-        for (Entity entity : loc.getWorld().getNearbyEntities(loc, radius, radius, radius)) {
-            if (!(entity instanceof Player)) continue;
+        for (Entity entity : location.getWorld()
+                .getNearbyEntities(location, radius, radius, radius)) {
+
+            if (!(entity instanceof Player)) {
+                continue;
+            }
 
             Player player = (Player) entity;
-            Optional<Match> pMatch = plugin.getMatchManager().getMatchByPlayer(player.getUniqueId());
-            if (pMatch.isEmpty() || pMatch.get() != match) continue;
 
-            double distSq = player.getLocation().distanceSquared(loc);
-            if (distSq > radiusSq) continue;
+            Optional<Match> playerMatch =
+                    plugin.getMatchManager()
+                            .getMatchByPlayer(player.getUniqueId());
 
-            double dist  = Math.sqrt(distSq);
-
-            // Minemen-style force curve: steeper near the centre.
-            double force = Math.pow(1.0 - (dist / radius), 0.50);
-            if (force <= 0.0) continue;
-
-            // Direction from explosion to player.
-            Vector delta = player.getLocation().toVector().subtract(loc.toVector());
-            if (delta.lengthSquared() < 0.0001) {
-                delta = new Vector(0.0, 1.0, 0.0);
+            if (playerMatch.isEmpty() || playerMatch.get() != match) {
+                continue;
             }
-            delta.normalize();
+
+            double distanceSquared =
+                    player.getLocation().distanceSquared(location);
+
+            if (distanceSquared > radiusSquared) {
+                continue;
+            }
+
+            double distance = Math.sqrt(distanceSquared);
+
+            // Players closer to the explosion get more kb.
+            double force = Math.pow(1.0 - (distance / radius), 0.5);
+
+            if (force <= 0.0) {
+                continue;
+            }
+
+            Vector direction =
+                    player.getLocation().toVector()
+                            .subtract(location.toVector());
+
+            if (direction.lengthSquared() < 0.0001) {
+                direction = new Vector(0, 1, 0);
+            }
+
+            direction.normalize();
 
             double horizontal;
             double vertical;
 
             if (isTnt) {
-                // TNT: strong outward push, firm consistent lift.
                 horizontal = knockback * force * 1.10;
-                vertical   = 0.50 + (force * 0.60);
+                vertical = 0.50 + (force * 0.60);
             } else {
-                // Fireball: slightly more outward + snappier vertical.
                 horizontal = knockback * force * 1.20;
-                vertical   = 0.48 + (force * 0.65);
+                vertical = 0.48 + (force * 0.65);
 
-                // Self-boost for the shooter (reward good fireball aim).
+                // Fireball jumps are slightly stronger for the shooter.
                 if (source instanceof Player
-                        && ((Player) source).getUniqueId().equals(player.getUniqueId())) {
+                        && source.getUniqueId().equals(player.getUniqueId())) {
                     horizontal *= 1.18;
-                    vertical   *= 1.10;
+                    vertical *= 1.10;
                 }
             }
 
-            // Build blast vector.
-            Vector blast = delta.clone().multiply(horizontal);
-            blast.setY(vertical);
+            Vector velocity = direction.clone().multiply(horizontal);
+            velocity.setY(vertical);
 
-            // Add to current velocity — Minemen style (no dampening).
-            Vector current = player.getVelocity();
-            current.add(blast);
+            Vector currentVelocity = player.getVelocity();
+            currentVelocity.add(velocity);
 
-            // Reasonable vertical cap to prevent absurd heights.
-            if (current.getY() > 3.0) {
-                current.setY(3.0);
+            // Stop explosions from launching players too high.
+            if (currentVelocity.getY() > 3.0) {
+                currentVelocity.setY(3.0);
             }
 
-            player.setVelocity(current);
+            player.setVelocity(currentVelocity);
         }
     }
 
-    private boolean isWithinArenaBoundaries(Location loc, Arena arena) {
-        Location min = arena.getMinimumBoundary();
-        Location max = arena.getMaximumBoundary();
-        if (min == null || max == null) return true;
+    private boolean isInsideArena(Location location, Arena arena) {
+        Location minimum = arena.getMinimumBoundary();
+        Location maximum = arena.getMaximumBoundary();
 
-        int minX = Math.min(min.getBlockX(), max.getBlockX());
-        int maxX = Math.max(min.getBlockX(), max.getBlockX());
-        int minY = Math.min(min.getBlockY(), max.getBlockY());
-        int maxY = Math.max(min.getBlockY(), max.getBlockY());
-        int minZ = Math.min(min.getBlockZ(), max.getBlockZ());
-        int maxZ = Math.max(min.getBlockZ(), max.getBlockZ());
+        if (minimum == null || maximum == null) {
+            return true;
+        }
 
-        int x = loc.getBlockX(), y = loc.getBlockY(), z = loc.getBlockZ();
-        return x >= minX && x <= maxX && y >= minY && y <= maxY && z >= minZ && z <= maxZ;
+        int minX = Math.min(minimum.getBlockX(), maximum.getBlockX());
+        int maxX = Math.max(minimum.getBlockX(), maximum.getBlockX());
+
+        int minY = Math.min(minimum.getBlockY(), maximum.getBlockY());
+        int maxY = Math.max(minimum.getBlockY(), maximum.getBlockY());
+
+        int minZ = Math.min(minimum.getBlockZ(), maximum.getBlockZ());
+        int maxZ = Math.max(minimum.getBlockZ(), maximum.getBlockZ());
+
+        int x = location.getBlockX();
+        int y = location.getBlockY();
+        int z = location.getBlockZ();
+
+        return x >= minX && x <= maxX
+                && y >= minY && y <= maxY
+                && z >= minZ && z <= maxZ;
     }
 }

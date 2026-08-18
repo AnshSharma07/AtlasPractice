@@ -28,16 +28,13 @@ import com.ansh.atlaspractice.arena.Arena;
 import com.ansh.atlaspractice.arena.ArenaMode;
 import com.ansh.atlaspractice.cosmetics.message.KillMessage;
 import com.ansh.atlaspractice.cosmetics.message.KillMessageType;
-import com.ansh.atlaspractice.match.BattleRushMatch;
-import com.ansh.atlaspractice.match.BridgeMatch;
-import com.ansh.atlaspractice.match.DuelMatch;
-import com.ansh.atlaspractice.match.Match;
-import com.ansh.atlaspractice.match.MatchTeam;
+import com.ansh.atlaspractice.match.*;
 import com.ansh.atlaspractice.party.PartyFFAMatch;
 import com.ansh.atlaspractice.party.PartyMatch;
 import com.ansh.atlaspractice.party.PartyPvPMatch;
 import com.ansh.atlaspractice.profile.KitStats;
 import com.ansh.atlaspractice.profile.Profile;
+import com.ansh.atlaspractice.util.CombatActionBar;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -137,7 +134,9 @@ public final class MatchDeathListener implements Listener {
 
         UUID killerUuid = plugin.getMatchManager().getLastAttacker(victim.getUniqueId());
         Player killer = killerUuid != null ? Bukkit.getPlayer(killerUuid) : null;
-
+        if (killer != null) {
+            CombatActionBar.showKill(killer, victim);
+        }
         String deathMessage;
 
         if (killer != null) {
