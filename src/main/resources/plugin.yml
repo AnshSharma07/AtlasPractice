@@ -106,6 +106,14 @@ commands:
     description: Opens a saved AtlasPractice match replay. (will later be simplified and made easy to use for server moderation)
     usage: /atlasreplayview <replayId>
 
+  replays:
+    description: Opens the AtlasPractice replay browser.
+    usage: /replays
+
+  replay:
+    description: Search AtlasPractice match replays.
+    usage: /replay search <player> [player] ...
+
   allowedrankedkits:
     description: Open the admin GUI to enable/disable kits for ranked queue.
     permission: atlaspractice.admin

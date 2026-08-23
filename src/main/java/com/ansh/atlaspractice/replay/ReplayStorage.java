@@ -28,6 +28,11 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 
 public final class ReplayStorage {
@@ -39,6 +44,50 @@ public final class ReplayStorage {
         this.plugin = plugin;
         this.file = new File(plugin.getDataFolder(), "replays.yml");
         this.config = YamlConfiguration.loadConfiguration(file);
+    }
+
+    public synchronized Map<String, ReplayMetadata> loadAll() {
+        Map<String, ReplayMetadata> result = new HashMap<>();
+        if (!config.isConfigurationSection("replays")) {
+            return result;
+        }
+
+        for (String id : config.getConfigurationSection("replays").getKeys(false)) {
+            ReplayMetadata metadata = load(id);
+            if (metadata != null) {
+                result.put(id, metadata);
+            }
+        }
+
+        return result;
+    }
+
+    public synchronized ReplayMetadata load(String replayId) {
+        String path = "replays." + replayId;
+        if (!config.contains(path)) {
+            return null;
+        }
+
+        try {
+            List<String> players = config.getStringList(path + ".players");
+            ReplayMetadata metadata = new ReplayMetadata(
+                    config.getString(path + ".replay-id", replayId),
+                    UUID.fromString(config.getString(path + ".replay-uuid")),
+                    UUID.fromString(config.getString(path + ".match-id")),
+                    config.getString(path + ".arena", "unknown"),
+                    config.getString(path + ".kit", "unknown"),
+                    players,
+                    Instant.parse(config.getString(path + ".date")),
+                    config.getString(path + ".match-type", "unknown")
+            );
+            metadata.setWinner(config.getString(path + ".winner", "Unknown"));
+            metadata.setLoser(config.getString(path + ".loser", "Unknown"));
+            metadata.setDurationMillis(config.getLong(path + ".duration-ms"));
+            return metadata;
+        } catch (IllegalArgumentException exception) {
+            plugin.getLogger().log(Level.WARNING, "Unable to load replay metadata for " + replayId, exception);
+            return null;
+        }
     }
 
     public synchronized void save(ReplayMetadata metadata) {

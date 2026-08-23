@@ -57,6 +57,7 @@ import com.ansh.atlaspractice.preset.command.PresetKitMenuCommand;
 import com.ansh.atlaspractice.profile.ProfileManager;
 import com.ansh.atlaspractice.queue.QueueManager;
 import com.ansh.atlaspractice.replay.ReplayManager;
+import com.ansh.atlaspractice.replay.ReplayCommand;
 import com.ansh.atlaspractice.replay.ReplayViewCommand;
 import com.ansh.atlaspractice.scoreboard.PracticeScoreboardAdapter;
 import com.ansh.atlaspractice.settings.PostMatchManager;
@@ -290,6 +291,10 @@ public final class AtlasPracticePlugin extends JavaPlugin {
                     new PracticeAdminCommand(this)
             );
             registerCommand("atlasreplayview", new ReplayViewCommand(replayManager));
+            ReplayCommand replayCommand = new ReplayCommand(this, replayManager);
+            registerCommand("replays", replayCommand);
+            registerCommand("replay", replayCommand);
+            getServer().getPluginManager().registerEvents(replayCommand, this);
             registerCommand("allowedrankedkits", new com.ansh.atlaspractice.commands.AllowedRankedKitsCommand(this));
             KitAdminCommand kitCommand =
                     new KitAdminCommand(this);

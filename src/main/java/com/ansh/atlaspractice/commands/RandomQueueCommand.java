@@ -46,8 +46,28 @@ public class RandomQueueCommand implements CommandExecutor {
      * command still exists to test the plugin.
      */
     private static final String[] RANDOM_KITS = {
-            "boxing"
-
+            "nodebuff",
+            "boxing",
+            "sumo",
+            "builduhc",
+            "combo",
+            "gapple",
+            "archer",
+            "classic",
+            "bridge",
+            "pearlfight",
+            "stickfight",
+            "iron",
+            "diamond",
+            "hcf",
+            "bedfight",
+            "fireballfight",
+            "topfight",
+            "finaluhc",
+            "debuff",
+            "soup",
+            "axe",
+            "battlerush"
     };
 
     public RandomQueueCommand(AtlasPracticePlugin plugin) {

@@ -43,6 +43,7 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -67,22 +68,25 @@ public final class ReplayManager {
         this.plugin = plugin;
         this.storage = new ReplayStorage(plugin);
 
-        available = Bukkit.getPluginManager().getPlugin("AdvancedReplay") != null
+        this.available = Bukkit.getPluginManager().getPlugin("AdvancedReplay") != null
                 || classExists("me.jumper251.replay.api.ReplayAPI");
 
         if (!available) {
-            plugin.getLogger().warning(
-                    "AtlasReplay was not found; Atlas replay recording is disabled."
-            );
+            plugin.getLogger().warning("AtlasReplay was not found; replay recording is disabled.");
         }
     }
 
     public void startRecording(Match match) {
-        if (!available || active.containsKey(match.getId())) {
+        if (!available) {
+            return;
+        }
+
+        if (active.containsKey(match.getId())) {
             return;
         }
 
         List<Player> players = getOnlinePlayers(match);
+
         if (players.isEmpty()) {
             return;
         }
@@ -91,6 +95,7 @@ public final class ReplayManager {
 
         try {
             Object api = getReplayApi();
+
             Method record = api.getClass().getMethod(
                     "recordReplay",
                     String.class,
@@ -110,11 +115,11 @@ public final class ReplayManager {
             match.broadcastMessage(
                     "§aReplay recording started.\n\nThis match is now being recorded."
             );
-        } catch (ReflectiveOperationException | RuntimeException exception) {
+        } catch (ReflectiveOperationException | RuntimeException e) {
             plugin.getLogger().log(
                     Level.WARNING,
-                    "Unable to start replay recording for match " + match.getId(),
-                    exception
+                    "Could not start replay for match " + match.getId(),
+                    e
             );
         }
     }
@@ -130,14 +135,17 @@ public final class ReplayManager {
                 System.currentTimeMillis() - match.getStartTime()
         );
 
-        metadata.setWinner(
-                winnerTeam == null ? "No one" : winnerTeam.getLeaderName()
-        );
+        if (winnerTeam != null) {
+            metadata.setWinner(winnerTeam.getLeaderName());
+        } else {
+            metadata.setWinner("No one");
+        }
 
         metadata.setLoser(resolveLoser(match, winnerTeam));
 
         try {
             Object api = getReplayApi();
+
             Method stop = api.getClass().getMethod(
                     "stopReplay",
                     String.class,
@@ -150,11 +158,11 @@ public final class ReplayManager {
             storage.save(metadata);
 
             sendSavedMessage(match, metadata.getReplayId());
-        } catch (ReflectiveOperationException | RuntimeException exception) {
+        } catch (ReflectiveOperationException | RuntimeException e) {
             plugin.getLogger().log(
                     Level.WARNING,
-                    "Unable to stop replay recording " + metadata.getReplayId(),
-                    exception
+                    "Could not stop replay " + metadata.getReplayId(),
+                    e
             );
         }
     }
@@ -165,10 +173,10 @@ public final class ReplayManager {
             return;
         }
 
-        if (!saved.containsKey(replayId)) {
-            player.sendMessage(
-                    "§cThat replay is not available on this server session."
-            );
+        ReplayMetadata metadata = getReplay(replayId);
+
+        if (metadata == null || !getReplayIds().contains(replayId)) {
+            player.sendMessage("§cThat replay is not available.");
             return;
         }
 
@@ -176,6 +184,7 @@ public final class ReplayManager {
 
         try {
             Object api = getReplayApi();
+
             Method play = api.getClass().getMethod(
                     "playReplay",
                     String.class,
@@ -183,16 +192,82 @@ public final class ReplayManager {
             );
 
             play.invoke(api, replayId, player);
-        } catch (ReflectiveOperationException | RuntimeException exception) {
+        } catch (ReflectiveOperationException | RuntimeException e) {
             plugin.getLogger().log(
                     Level.WARNING,
-                    "Unable to play replay " + replayId + " for " + player.getName(),
-                    exception
+                    "Could not play replay " + replayId + " for " + player.getName(),
+                    e
             );
 
             resetToLobbyState(player);
             player.sendMessage("§cUnable to open that replay right now.");
         }
+    }
+
+    public List<ReplayMetadata> getAvailableReplays() {
+        Map<String, ReplayMetadata> replays = new HashMap<>(saved);
+        replays.putAll(storage.loadAll());
+
+        List<ReplayMetadata> result = new ArrayList<>();
+
+        for (String id : getReplayIds()) {
+            ReplayMetadata replay = replays.get(id);
+
+            if (replay != null) {
+                result.add(replay);
+            }
+        }
+
+        result.sort((a, b) -> b.getDate().compareTo(a.getDate()));
+
+        return result;
+    }
+
+    public ReplayMetadata getReplay(String replayId) {
+        ReplayMetadata replay = saved.get(replayId);
+
+        if (replay != null) {
+            return replay;
+        }
+
+        return storage.load(replayId);
+    }
+
+    public List<String> getReplayIds() {
+        if (!available) {
+            return new ArrayList<>();
+        }
+
+        try {
+            Class<?> saver = Class.forName(
+                    "me.jumper251.replay.filesystem.saving.ReplaySaver"
+            );
+
+            Object value = saver.getMethod("getReplays").invoke(null);
+
+            if (!(value instanceof List)) {
+                return new ArrayList<>();
+            }
+
+            List<?> list = (List<?>) value;
+            List<String> ids = new ArrayList<>();
+
+            for (Object id : list) {
+                if (id != null) {
+                    ids.add(String.valueOf(id));
+                }
+            }
+
+            return ids;
+        } catch (ReflectiveOperationException | RuntimeException e) {
+            plugin.getLogger().log(
+                    Level.WARNING,
+                    "Could not load saved replay list.",
+                    e
+            );
+        }
+
+        return new ArrayList<>();
     }
 
     public void shutdown() {
@@ -209,32 +284,33 @@ public final class ReplayManager {
                 api.getClass()
                         .getMethod("stopReplay", String.class, boolean.class)
                         .invoke(api, metadata.getReplayId(), true);
-            } catch (ReflectiveOperationException | RuntimeException exception) {
+
+            } catch (ReflectiveOperationException | RuntimeException e) {
                 plugin.getLogger().log(
                         Level.WARNING,
-                        "Unable to stop replay during shutdown: "
+                        "Could not stop replay during shutdown: "
                                 + metadata.getReplayId(),
-                        exception
+                        e
                 );
             }
         }
     }
 
     private ReplayMetadata createMetadata(Match match) {
-        String kit = match.getKit() != null
-                ? match.getKit().getId()
-                : "unknown";
+        String kit = "unknown";
+        if (match.getKit() != null) {
+            kit = match.getKit().getId();
+        }
 
-        String arena = match.getArena() != null
-                ? match.getArena().getDisplayName()
-                : "unknown";
+        String arena = "unknown";
+        if (match.getArena() != null) {
+            arena = match.getArena().getDisplayName();
+        }
 
-        String type;
+        String type = match.getClass().getSimpleName();
 
         if (match instanceof DuelMatch && ((DuelMatch) match).isRanked()) {
             type = "Ranked";
-        } else {
-            type = match.getClass().getSimpleName();
         }
 
         String replayId = "atlas-"
@@ -298,6 +374,7 @@ public final class ReplayManager {
 
     private void sendSavedMessage(Match match, String replayId) {
         TextComponent click = new TextComponent("§e[CLICK HERE]");
+
         click.setClickEvent(new ClickEvent(
                 ClickEvent.Action.RUN_COMMAND,
                 "/atlasreplayview " + replayId
@@ -380,7 +457,7 @@ public final class ReplayManager {
         try {
             Class.forName(name);
             return true;
-        } catch (ClassNotFoundException exception) {
+        } catch (ClassNotFoundException e) {
             return false;
         }
     }
