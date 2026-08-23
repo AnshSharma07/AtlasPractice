@@ -79,12 +79,10 @@ public final class RankedMenu extends Menu {
             );
             ItemMeta meta = icon.getItemMeta();
             if (meta != null) {
-                meta.setDisplayName("§a§l" + kit.getDisplayName());
+                meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', kit.getDisplayName()));
                 List<String> lore = new ArrayList<>();
 
-                for (String line : kit.getLore()) {
-                    lore.add(ChatColor.translateAlternateColorCodes('&', line));
-                }
+                lore.addAll(kit.getColoredLore());
 
                 meta.setLore(lore);
                 icon.setItemMeta(meta);

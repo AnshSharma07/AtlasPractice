@@ -67,10 +67,12 @@ public final class PlayerHungerListener implements Listener {
         if (match == null) {
             return;
         }
-        player.sendMessage(
-                "Kit=" + match.getKit().getId()
-                        + " Hunger=" + match.getKit().isHungerLossEnabled()
-        );
+
+        // Food based kits use Minecraft's normal hunger system.
+        if (match.getKit().hasFood()) {
+            return;
+        }
+
         if (!match.getKit().isHungerLossEnabled()) {
             event.setCancelled(true);
             player.setFoodLevel(20);

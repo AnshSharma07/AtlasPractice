@@ -24,6 +24,7 @@
 package com.ansh.atlaspractice.kit;
 
 import com.ansh.atlaspractice.team.KitColorUtil;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -67,6 +68,30 @@ public final class Kit {
 
     public void setLore(List<String> lore) {
         this.lore = lore != null ? new ArrayList<>(lore) : new ArrayList<>();
+    }
+
+    public List<String> getColoredLore() {
+        List<String> result = new ArrayList<>();
+        for (String line : lore) {
+            result.add(ChatColor.translateAlternateColorCodes('&', line));
+        }
+        return result;
+    }
+
+    public boolean hasFood() {
+        for (ItemStack item : mainContents) {
+            if (item != null && item.getType().isEdible()) {
+                return true;
+            }
+        }
+
+        for (ItemStack item : armorContents) {
+            if (item != null && item.getType().isEdible()) {
+                return true;
+            }
+        }
+
+        return false;
     }
     public boolean isHungerLossEnabled() {
         return hungerLossEnabled;
@@ -185,6 +210,7 @@ public final class Kit {
 
         player.getInventory().setContents(contents);
         player.getInventory().setArmorContents(armorContents.clone());
+        resetFoodState(player);
 
         player.updateInventory();
     }
@@ -236,6 +262,7 @@ public final class Kit {
 
         player.getInventory().setContents(mainContents.clone());
         player.getInventory().setArmorContents(armorContents.clone());
+        resetFoodState(player);
 
         player.updateInventory();
     }
@@ -256,6 +283,7 @@ public final class Kit {
                         teamColor
                 )
         );
+        resetFoodState(player);
 
         player.updateInventory();
     }
@@ -285,8 +313,20 @@ public final class Kit {
                         teamColor
                 )
         );
+        resetFoodState(player);
 
         player.updateInventory();
+    }
+
+    private void resetFoodState(Player player) {
+        if (!hasFood()) {
+            return;
+        }
+
+        // Start food kits without stored saturation so natural regeneration
+        // and hunger are handled by Minecraft normally.
+        player.setSaturation(0.0F);
+        player.setExhaustion(0.0F);
     }
 
     public Kit copy() {

@@ -26,6 +26,7 @@ package com.ansh.atlaspractice.menus;
 import com.ansh.atlaspractice.AtlasPracticePlugin;
 import com.ansh.atlaspractice.kit.Kit;
 import com.ansh.atlaspractice.profile.Profile;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -81,12 +82,9 @@ public final class UnrankedMenu extends Menu {
 
             ItemMeta meta = icon.getItemMeta();
             if (meta != null) {
-                meta.setDisplayName("§f" + kit.getDisplayName());
+                meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', kit.getDisplayName()));
                 List<String> lore = new ArrayList<>();
-
-                for (String line : kit.getLore()) {
-                    lore.add(org.bukkit.ChatColor.translateAlternateColorCodes('&', line));
-                }
+                lore.addAll(kit.getColoredLore());
 
                 meta.setLore(lore);
                 icon.setItemMeta(meta);

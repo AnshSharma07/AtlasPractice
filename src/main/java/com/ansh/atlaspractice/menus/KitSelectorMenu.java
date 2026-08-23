@@ -166,13 +166,11 @@ public final class KitSelectorMenu implements Listener {
         ItemMeta meta = item.getItemMeta();
 
         if (meta != null) {
-            meta.setDisplayName(ChatColor.YELLOW + kit.getDisplayName());
+            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', kit.getDisplayName()));
 
             List<String> lore = new ArrayList<>();
 
-            for (String line : kit.getLore()) {
-                lore.add(ChatColor.translateAlternateColorCodes('&', line));
-            }
+            lore.addAll(kit.getColoredLore());
 
             meta.setLore(lore);
 
