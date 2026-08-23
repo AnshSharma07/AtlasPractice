@@ -325,6 +325,7 @@ public final class Kit {
 
         // Start food kits without stored saturation so natural regeneration
         // and hunger are handled by Minecraft normally.
+        // earlier bugged and give unlimited saturation & regen.
         player.setSaturation(0.0F);
         player.setExhaustion(0.0F);
     }
