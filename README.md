@@ -52,7 +52,7 @@ AtlasPractice includes a large collection of built-in kits, including:
 * BedFight
 * Bridge
 * BuildUHC
-* And many more...
+* And 11 more....
 
 ---
 
