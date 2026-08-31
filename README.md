@@ -108,7 +108,7 @@ Tracks player progression including:
 
 ## 🎥 Replay Support
 
-Optional integration with **AdvancedReplay** allows players to watch completed matches directly from within AtlasPractice.
+Optional integration with **[AtlasReplay](https://github.com/AnshSharma07/AtlasReplay)** allows players to watch completed matches directly from within AtlasPractice.
 
 ---
 
@@ -116,10 +116,11 @@ Optional integration with **AdvancedReplay** allows players to watch completed m
 
 Supported integrations include:
 
-* SlimeWorldManager (needed)
-* AdvancedReplay (optional)
-* PlaceholderAPI (needed)
-* AtlasMore (optional)
+* **[AtlasSWM](https://github.com/AnshSharma07/AtlasSWM)** (needed)
+* **[AtlasReplay](https://github.com/AnshSharma07/AtlasReplay)** (optional)
+* **[PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/)** (needed)
+* **[AtlasMore](https://github.com/AnshSharma07/AtlasMore)** (optional)
+
 
 ---
 
@@ -137,7 +138,7 @@ Supported integrations include:
 
 Optional:
 
-* AdvancedReplay
+* AtlasReplay
 * AtlasMore
 
 ---
