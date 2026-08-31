@@ -8,6 +8,7 @@ AtlasPractice focuses on performance, customization, and ease of use while provi
 > **Minecraft Version:** 1.8.8 (PandaSpigot/Spigot)
 > **Java:** 17
 
+**[AtlasPractice Documentation](https://modularboyansh.xyz/atlas_docs)** 
 ---
 
 #  Features
